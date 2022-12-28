@@ -4,19 +4,34 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter as Router } from "react-router-dom";
+import { DragDropContext, DropResult } from "react-beautiful-dnd";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
-root.render(
-  <React.StrictMode>
-    <Router>
-      <App />
-    </Router>
-  </React.StrictMode>
-);
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+const handleDragEnd = (result: DropResult) => {
+  const { destination, source } = result;
+
+  console.log(source);
+  console.log(destination);
+
+  if (!destination) return;
+
+  if (
+    destination.index === source.index ||
+    destination.droppableId === source.droppableId
+  )
+    return;
+};
+
+root.render(
+  // <React.StrictMode>
+  <Router>
+    <DragDropContext onDragEnd={(result) => handleDragEnd(result)}>
+      <App />
+    </DragDropContext>
+  </Router>
+  // </React.StrictMode>
+);
 reportWebVitals();

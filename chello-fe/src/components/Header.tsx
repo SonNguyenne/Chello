@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import {
   FaBell,
   FaSearch,
@@ -50,12 +50,11 @@ const Header = () => {
   const [toggleNav, setToggleNav] = useState(false);
   const [responsive, setResponsive] = useState(false);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     window.addEventListener("resize", () =>
       window.innerWidth <= 1280 ? setResponsive(true) : setResponsive(false)
     );
-  });
-
+  }, []);
   const changeTheme = (theme: string) => {
     setTheme(theme);
   };
