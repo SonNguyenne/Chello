@@ -1,4 +1,4 @@
-import { useLayoutEffect, useState } from "react";
+import { useState } from "react";
 import {
   FaBell,
   FaSearch,
@@ -47,14 +47,8 @@ const workspace = {
 
 const Header = () => {
   const [theme, setTheme] = useState("default");
-  const [toggleNav, setToggleNav] = useState(false);
-  const [responsive, setResponsive] = useState(false);
+  const [toggleNav, setToggleNav] = useState(true);
 
-  useLayoutEffect(() => {
-    window.addEventListener("resize", () =>
-      window.innerWidth <= 1280 ? setResponsive(true) : setResponsive(false)
-    );
-  }, []);
   const changeTheme = (theme: string) => {
     setTheme(theme);
   };
@@ -79,7 +73,7 @@ const Header = () => {
                   <FaCaretDown />
                 </span>
               </div>
-              {(responsive ? toggleNav : true) && (
+              {toggleNav && (
                 <ul className={"navbar-responsive-item"}>
                   <li>
                     <span>Các không gian làm việc</span>

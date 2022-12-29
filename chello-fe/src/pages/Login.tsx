@@ -1,7 +1,117 @@
-import React from "react";
+import React, { useState } from "react";
+import {
+  FaArrowUp,
+  FaFacebook,
+  FaGithub,
+  FaGoogle,
+  FaLinkedin,
+  FaRegArrowAltCircleRight,
+  FaTasks,
+} from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 const Login = () => {
-  return <div>Login</div>;
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPasswordInput, setShowPasswordInput] = useState(false);
+
+  const handleSetUsername = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUsername(e.target.value);
+  };
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      submitUsername();
+    }
+  };
+  const submitUsername = () => {
+    if (username === "") {
+      return alert("Please enter a username");
+    } else {
+      setShowPasswordInput(!showPasswordInput);
+    }
+  };
+
+  const handleSetPassword = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value);
+  };
+  const handleSubmit = () => {
+    if (username === "") {
+      return alert("Please enter username");
+    } else if (password === "") {
+      return alert("Please enter password");
+    } else {
+      return alert(`Username: ${username} \nPassword: ${password}`);
+    }
+  };
+
+  return (
+    <div className="login-container">
+      <div className="login-wrapper">
+        <div className="login-logo">
+          <FaTasks />
+        </div>
+        <div className="login-title">
+          {/* <h1>Chello ID</h1> */}
+          <h1>Đăng nhập</h1>
+        </div>
+        <div className="login-social">
+          <span className="facebook-icon">
+            <FaFacebook />
+          </span>
+          <span className="google-icon">
+            <FaGoogle />
+          </span>
+          <span className="github-icon">
+            <FaGithub />
+          </span>
+          <span className="linkedin-icon">
+            <FaLinkedin />
+          </span>
+        </div>
+        <h3>hoặc</h3>
+        <div className="login-content">
+          <div className="login-username">
+            <input
+              type="text"
+              placeholder="Nhập tài khoản"
+              onChange={handleSetUsername}
+              autoFocus
+              onKeyDown={handleKeyDown}
+            />
+            {!showPasswordInput && (
+              <FaRegArrowAltCircleRight onClick={submitUsername} />
+            )}
+          </div>
+          {showPasswordInput && (
+            <div className="login-password">
+              <input
+                type="password"
+                placeholder="Nhập mật khẩu"
+                onChange={handleSetPassword}
+                autoFocus
+                required
+              />
+              <FaRegArrowAltCircleRight onClick={handleSubmit} />
+            </div>
+          )}
+        </div>
+        <div className="login-footer">
+          <div className="login-footer-checkbox">
+            <input type="checkbox" id="rememberCheckbox" />
+            <label htmlFor="rememberCheckbox">Nhớ tài khoản</label>
+          </div>
+          <hr />
+          <div className="forgot-password">
+            <Link to="">
+              <span>
+                Quên tài khoản hoặc mật khẩu? <FaArrowUp />
+              </span>
+            </Link>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default Login;

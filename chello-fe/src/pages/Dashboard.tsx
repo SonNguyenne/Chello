@@ -12,6 +12,7 @@ import {
   FaRegStar,
   FaStar,
   FaTable,
+  FaTimes,
   FaUsers,
 } from "react-icons/fa";
 
@@ -32,6 +33,16 @@ const workspace = {
       name: "Project",
       img: "https://cdn.pixabay.com/photo/2020/04/30/14/03/mountains-and-hills-5112952__480.jpg",
     },
+    {
+      id: 4,
+      name: "Lịch học",
+      img: "https://cdn.pixabay.com/photo/2020/04/30/14/03/mountains-and-hills-5112952__480.jpg",
+    },
+    {
+      id: 5,
+      name: "Project",
+      img: "https://cdn.pixabay.com/photo/2020/04/30/14/03/mountains-and-hills-5112952__480.jpg",
+    },
   ],
   favWorkspace: [
     {
@@ -49,22 +60,29 @@ const workspace = {
   ],
 };
 const Dashboard = () => {
-  const [showSlideMenu, setShowSlideMenu] = useState(false);
+  const [showSlideMenu, setShowSlideMenu] = useState(true);
   const [showWorkspaceInfo, setShowWorkspaceInfo] = useState(0);
 
   return (
     <div className="dashboard-container">
       <div
         className="slide-menu"
-        style={{ left: showSlideMenu ? "0%" : "-32.1%" }}
+        style={{ width: showSlideMenu ? "300px" : "0" }}
       >
         <div
           className="btn-open-slide-menu"
           onClick={() => setShowSlideMenu(!showSlideMenu)}
+          style={{ display: showSlideMenu ? "none" : "block" }}
         >
           <FaChevronRight />
         </div>
-        <ul>
+        <ul style={{ display: showSlideMenu ? "block" : "none" }}>
+          <span
+            className="btn-close-slide-menu"
+            onClick={() => setShowSlideMenu(!showSlideMenu)}
+          >
+            <FaTimes />
+          </span>
           <li className="slide-menu-top-items">
             <span>
               <FaTable />
