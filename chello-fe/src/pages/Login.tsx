@@ -47,8 +47,13 @@ const Login = () => {
   return (
     <div className="login-container">
       <div className="login-wrapper">
-        <div className="login-logo">
-          <FaTasks />
+        <div className="login-img-top">
+          <img
+            src="./logo-border.png"
+            alt="logo-border"
+            className="logo-border"
+          />
+          <img src="./logo.png" alt="logo" className="logo-img" />
         </div>
         <div className="login-title">
           {/* <h1>Chello ID</h1> */}
@@ -70,7 +75,12 @@ const Login = () => {
         </div>
         <h3>hoặc</h3>
         <div className="login-content">
-          <div className="login-username">
+          <div
+            className="login-username"
+            style={{
+              borderRadius: showPasswordInput ? "10px 10px 0 0" : "10px",
+            }}
+          >
             <input
               type="text"
               placeholder="Nhập tài khoản"

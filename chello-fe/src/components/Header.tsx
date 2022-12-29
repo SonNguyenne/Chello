@@ -3,7 +3,6 @@ import {
   FaBell,
   FaSearch,
   FaCaretDown,
-  FaTasks,
   FaPlus,
   FaTable,
   FaUsers,
@@ -60,7 +59,7 @@ const Header = () => {
           {/* Left */}
           <div className="navbar-left">
             <Link to="/">
-              <FaTasks className="logo-icon" />
+              <img src="./logo.png" alt="logo" className="logo-icon" />
               <span>Chello</span>
             </Link>
             <div className="navbar-responsive">

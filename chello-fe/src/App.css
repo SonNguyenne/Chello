@@ -13,8 +13,9 @@
 }
 .logo-icon {
   pointer-events: none;
-  font-size: 30px;
   margin-right: 10px;
+  width: 45px;
+  height: 35px;
 }
 
 @keyframes logo-spin {
@@ -937,26 +938,42 @@ header.light * {
   position: relative;
   letter-spacing: 0.4px;
   text-align: center;
+  overflow: hidden;
 }
 .login-container .login-wrapper {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
   box-sizing: border-box;
+  width: 100%;
+  height: 100%;
 }
-.login-container .login-wrapper .login-logo {
-  padding: 50px 0;
+.login-container .login-wrapper .login-img-top {
+  position: relative;
+  height: 300px;
+  width: 300px;
+  box-sizing: border-box;
 }
-.login-container .login-wrapper .login-logo svg {
-  font-size: 45px;
-  color: var(--main-color);
+@keyframes border-scale {
+  to {
+    transform: scale(1.2);
+    filter: brightness(100%);
+    opacity: 0.8;
+  }
 }
-.login-container .login-wrapper .login-title {
-  padding: 10px 0;
+.login-container .login-wrapper:hover .logo-border {
+  animation: border-scale 2s ease-in-out forwards;
 }
-.login-container .login-wrapper .login-title h1 {
-  padding-bottom: 5px;
+.login-container .login-wrapper .login-img-top .logo-border {
+  height: 100%;
+  filter: brightness(30%);
+}
+.login-container .login-wrapper .login-img-top .logo-img {
+  position: absolute;
+  height: 100px;
+  top: 30%;
+  left: 27%;
 }
 .login-container .login-wrapper .login-social {
   width: 300px;
@@ -983,7 +1000,7 @@ header.light * {
   display: flex;
   flex-direction: column;
   border-radius: 10px;
-  padding: 10px;
+  padding: 30px;
 }
 .login-container .login-wrapper .login-content div {
   background-color: white;
@@ -1006,7 +1023,7 @@ header.light * {
   width: 100%;
 }
 .login-container .login-wrapper .login-content .login-username {
-  border-radius: 10px 10px 0 0;
+  border-radius: 10px;
   padding: 5px;
 }
 .login-container .login-wrapper .login-content .login-password {
@@ -1023,7 +1040,7 @@ header.light * {
   color: black;
 }
 .login-container .login-wrapper .login-footer {
-  padding: 10px 0;
+  padding-bottom: 60px;
   text-align: center;
 }
 .login-container .login-wrapper .login-footer .login-footer-checkbox {
@@ -1032,7 +1049,8 @@ header.light * {
   cursor: pointer;
 }
 .login-container .login-wrapper .login-footer hr {
-  border: 0.1px solid lightgrey;
+  border: 0.01px solid rgb(240, 240, 240);
+  margin: 30px 0;
 }
 .login-container .login-wrapper .login-footer span {
   color: #06c;
