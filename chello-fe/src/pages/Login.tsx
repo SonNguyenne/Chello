@@ -6,7 +6,6 @@ import {
   FaGoogle,
   FaLinkedin,
   FaRegArrowAltCircleRight,
-  FaTasks,
 } from "react-icons/fa";
 import { Link } from "react-router-dom";
 

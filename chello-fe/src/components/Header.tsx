@@ -263,11 +263,13 @@ const Header = () => {
                   </div>
                 </li>
                 <li>
-                  <img
-                    className="avatar"
-                    src="https://i.ibb.co/xMdsc1K/WBS.png"
-                    alt="avatar"
-                  />
+                  <Link to="/profile">
+                    <img
+                      className="avatar"
+                      src="https://i.ibb.co/xMdsc1K/WBS.png"
+                      alt="avatar"
+                    />
+                  </Link>
                   <div className="navbar-dropdown">
                     <ul>
                       <h5>Tài khoản</h5>
