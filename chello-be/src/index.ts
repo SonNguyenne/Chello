@@ -15,5 +15,5 @@ app.get("/", (req: any, res: any) => {
 });
 
 app.listen(3000, () => {
-  console.log(`http://localhost:${3000}`);
+  console.log(`\nLink: http://localhost:${3000}`);
 });

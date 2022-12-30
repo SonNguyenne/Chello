@@ -4,9 +4,9 @@
   "description": "![alt text](https://i.ibb.co/w69xx7C/ERD-drawio.png)",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon -e ts --exec \"npm run buildrun\"",
+    "dev": "nodemon -e ts --exec \"npm run start\"",
     "build": "tsc",
-    "start": "npm run build && node ./dist/index.js"
+    "start": "npm run build && nodemon --inspect ./dist/index.js"
   },
   "repository": {
     "type": "git",
@@ -25,12 +25,16 @@
     "cors": "^2.8.5",
     "express": "^4.18.2",
     "joi": "^17.7.0",
-    "request": "^2.88.2"
+    "path": "^0.12.7",
+    "request": "^2.88.2",
+    "yamljs": "^0.3.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.13",
     "@types/node": "^18.11.18",
     "@types/swagger-ui-express": "^4.1.3",
+    "@types/yamljs": "^0.2.31",
+    "nodemon": "^2.0.20",
     "swagger-ui-express": "^4.6.0",
     "typescript": "^4.9.4"
   }
