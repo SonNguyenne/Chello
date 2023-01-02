@@ -184,7 +184,7 @@ paths:
           description: Invalid userId supplied
         "404":
           description: User not found
-  /workspace:
+  /workspace/createWorkspace:
     post:
       tags:
         - workspace
