@@ -1,24 +1,17 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Draggable } from "react-beautiful-dnd";
-import { FaEllipsisH, FaPlus, FaTimes } from "react-icons/fa";
+import { FaEllipsisH, FaPlus } from "react-icons/fa";
+import InputAdd from "./InputAdd";
 import Item from "./Item";
-
-// interface CardObject {
-//   cardId: string;
-//   cardName: string;
-//   isActived: boolean;
-//   items: [];
-// }
 
 const Card = (props: any) => {
   const [card, setCard] = useState(props.data);
-
-  const [showCardAdd, setShowCardAdd] = useState(false);
+  const [showItemAdd, setShowItemAdd] = useState(false);
   const [newItemName, setNewItemName] = useState("");
 
-  const handleShowCard = () => {
-    setShowCardAdd(!showCardAdd);
-    if (showCardAdd === false) {
+  const handleShowAddItem = () => {
+    setShowItemAdd(!showItemAdd);
+    if (showItemAdd === false) {
       setNewItemName("");
     }
   };
@@ -27,16 +20,25 @@ const Card = (props: any) => {
     setNewItemName(e.target.value);
   };
 
-  const handleSubmitAddCard = (cardId: string) => {
+  const handleSubmitAddItem = (cardId: string) => {
+    if (newItemName === "") {
+      return alert("Please enter card name");
+    }
     if (card.cardId === cardId) {
       card.items.push({
-        itemId: 123,
+        itemId: "" + Math.random(),
         itemName: newItemName,
         // member: [],
       });
     }
     setCard(card);
-    setShowCardAdd(!showCardAdd);
+    setShowItemAdd(!showItemAdd);
+  };
+
+  const handleAddNewItem = (e: React.KeyboardEvent, cardId: string) => {
+    if (e.key === "Enter") {
+      handleSubmitAddItem(cardId);
+    }
   };
 
   return (
@@ -78,29 +80,18 @@ const Card = (props: any) => {
               </Draggable>
             ))}
           {props.placeholder}
-          {showCardAdd && (
-            <div className="card-add">
-              <div className="item card-add-content">
-                <input
-                  type="textbox"
-                  autoFocus
-                  placeholder="Nhập tiêu đề thẻ"
-                  onChange={(e) => handleSetNewItemName(e)}
-                />
-              </div>
-              <div className="card-add-button">
-                <button onClick={(e) => handleSubmitAddCard(card.cardId)}>
-                  Thêm thẻ
-                </button>
-                <span onClick={handleShowCard}>
-                  <FaTimes />
-                </span>
-              </div>
-            </div>
+          {showItemAdd && (
+            <InputAdd
+              handleSetNewName={(e) => handleSetNewItemName(e)}
+              handleAddNew={(e) => handleAddNewItem(e, card.cardId)}
+              handleSubmitAdd={() => handleSubmitAddItem(card.cardId)}
+              handleShowAdd={handleShowAddItem}
+              placeholder={"thẻ"}
+            />
           )}
         </div>
-        {!showCardAdd && (
-          <div className="card-footer" onClick={handleShowCard}>
+        {!showItemAdd && (
+          <div className="card-footer" onClick={handleShowAddItem}>
             <span>
               <FaPlus />
               Thêm thẻ

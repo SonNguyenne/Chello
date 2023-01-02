@@ -5,21 +5,24 @@ import {
   FaChevronDown,
   FaEllipsisH,
   FaFilter,
+  FaPlus,
   FaPuzzlePiece,
   FaTable,
   FaUserPlus,
   FaUsers,
 } from "react-icons/fa";
 import Card from "../components/Card";
+import InputAdd from "../components/InputAdd";
 
 const api = {
+  workspaceId: "123",
   name: "Chello",
   member: [
     {
       userId: 10,
       name: "Nguyễn Tiến Thành",
       avatar:
-        "https://trello-members.s3.amazonaws.com/6208185d22378908eaf17722/6d5088726de9a21d241ba149c30f957c/50.png",
+        "https://www.dungplus.com/wp-content/uploads/2019/02/Roronoa-zoro-2-584x400.jpg",
     },
     {
       userId: 20,
@@ -43,7 +46,7 @@ const api = {
               userId: 10,
               name: "Nguyễn Tiến Thành",
               avatar:
-                "https://trello-members.s3.amazonaws.com/6208185d22378908eaf17722/6d5088726de9a21d241ba149c30f957c/50.png",
+                "https://www.dungplus.com/wp-content/uploads/2019/02/Roronoa-zoro-2-584x400.jpg",
             },
             {
               userId: 20,
@@ -62,7 +65,7 @@ const api = {
               userId: 10,
               name: "Nguyễn Tiến Thành",
               avatar:
-                "https://trello-members.s3.amazonaws.com/6208185d22378908eaf17722/6d5088726de9a21d241ba149c30f957c/50.png",
+                "https://www.dungplus.com/wp-content/uploads/2019/02/Roronoa-zoro-2-584x400.jpg",
             },
           ],
         },
@@ -75,7 +78,7 @@ const api = {
               userId: 10,
               name: "Nguyễn Tiến Thành",
               avatar:
-                "https://trello-members.s3.amazonaws.com/6208185d22378908eaf17722/6d5088726de9a21d241ba149c30f957c/50.png",
+                "https://www.dungplus.com/wp-content/uploads/2019/02/Roronoa-zoro-2-584x400.jpg",
             },
           ],
         },
@@ -88,7 +91,7 @@ const api = {
               userId: 10,
               name: "Nguyễn Tiến Thành",
               avatar:
-                "https://trello-members.s3.amazonaws.com/6208185d22378908eaf17722/6d5088726de9a21d241ba149c30f957c/50.png",
+                "https://www.dungplus.com/wp-content/uploads/2019/02/Roronoa-zoro-2-584x400.jpg",
             },
           ],
         },
@@ -100,7 +103,7 @@ const api = {
               userId: 10,
               name: "Nguyễn Tiến Thành",
               avatar:
-                "https://trello-members.s3.amazonaws.com/6208185d22378908eaf17722/6d5088726de9a21d241ba149c30f957c/50.png",
+                "https://www.dungplus.com/wp-content/uploads/2019/02/Roronoa-zoro-2-584x400.jpg",
             },
           ],
         },
@@ -112,7 +115,7 @@ const api = {
               userId: 10,
               name: "Nguyễn Tiến Thành",
               avatar:
-                "https://trello-members.s3.amazonaws.com/6208185d22378908eaf17722/6d5088726de9a21d241ba149c30f957c/50.png",
+                "https://www.dungplus.com/wp-content/uploads/2019/02/Roronoa-zoro-2-584x400.jpg",
             },
           ],
         },
@@ -124,7 +127,7 @@ const api = {
               userId: 10,
               name: "Nguyễn Tiến Thành",
               avatar:
-                "https://trello-members.s3.amazonaws.com/6208185d22378908eaf17722/6d5088726de9a21d241ba149c30f957c/50.png",
+                "https://www.dungplus.com/wp-content/uploads/2019/02/Roronoa-zoro-2-584x400.jpg",
             },
           ],
         },
@@ -136,7 +139,7 @@ const api = {
               userId: 10,
               name: "Nguyễn Tiến Thành",
               avatar:
-                "https://trello-members.s3.amazonaws.com/6208185d22378908eaf17722/6d5088726de9a21d241ba149c30f957c/50.png",
+                "https://www.dungplus.com/wp-content/uploads/2019/02/Roronoa-zoro-2-584x400.jpg",
             },
           ],
         },
@@ -161,7 +164,7 @@ const api = {
               userId: 10,
               name: "Nguyễn Tiến Thành",
               avatar:
-                "https://trello-members.s3.amazonaws.com/6208185d22378908eaf17722/6d5088726de9a21d241ba149c30f957c/50.png",
+                "https://www.dungplus.com/wp-content/uploads/2019/02/Roronoa-zoro-2-584x400.jpg",
             },
           ],
         },
@@ -265,6 +268,37 @@ const api = {
 
 const Workspace = () => {
   const [workspace, setWorkspace] = useState(api);
+  const [showCardAdd, setShowCardAdd] = useState(false);
+  const [newCardName, setNewCardName] = useState("");
+
+  const handleShowCardAdd = () => {
+    setShowCardAdd(!showCardAdd);
+  };
+
+  const handleSetNewCardName = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNewCardName(e.target.value);
+  };
+
+  const handleAddNewCard = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      handleSubmitAddCard();
+      setNewCardName("");
+    }
+  };
+
+  const handleSubmitAddCard = () => {
+    if (newCardName === "") {
+      return alert("Please enter card name");
+    }
+    workspace.cards.push({
+      cardId: "" + Math.random(),
+      cardName: newCardName,
+      isActived: true,
+      items: [],
+    });
+    setWorkspace(workspace);
+    setShowCardAdd(!showCardAdd);
+  };
 
   return (
     <div className="workspace-container">
@@ -367,6 +401,31 @@ const Workspace = () => {
               </Droppable>
             );
           })}
+          <div className="card card-create">
+            <div
+              className="card-wrapper"
+              style={{ backgroundColor: showCardAdd ? "#ebecf0" : "" }}
+            >
+              {!showCardAdd ? (
+                <div className="card-header" onClick={handleShowCardAdd}>
+                  <span>Tạo bảng mới</span>
+                  <span>
+                    <FaPlus />
+                  </span>
+                </div>
+              ) : (
+                <div className="card-body">
+                  <InputAdd
+                    handleSetNewName={handleSetNewCardName}
+                    handleAddNew={(e) => handleAddNewCard(e)}
+                    handleSubmitAdd={handleSubmitAddCard}
+                    handleShowAdd={handleShowCardAdd}
+                    placeholder={"bảng"}
+                  />
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       </div>
     </div>

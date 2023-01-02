@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import {
   FaBell,
   FaSearch,
@@ -11,42 +11,27 @@ import {
   FaSignInAlt,
 } from "react-icons/fa";
 import { Link, Outlet } from "react-router-dom";
+import { fetchWorkspace } from "../apis/workspace.api";
 import "../App.css";
-
-const workspace = {
-  myWorkspace: [
-    {
-      name: "Không gian 1",
-      img: "https://thuthuatnhanh.com/wp-content/uploads/2021/11/hinh-anh-chill-dep.jpg",
-    },
-    {
-      name: "Lịch học",
-      img: "https://thuthuatnhanh.com/wp-content/uploads/2021/11/hinh-anh-chill-dep.jpg",
-    },
-    {
-      name: "Project",
-      img: "https://thuthuatnhanh.com/wp-content/uploads/2021/11/hinh-anh-chill-dep.jpg",
-    },
-  ],
-  favWorkspace: [
-    {
-      name: "Không gian 2",
-      img: "https://thuthuatnhanh.com/wp-content/uploads/2021/11/hinh-anh-chill-dep.jpg",
-    },
-    {
-      name: "Đồ án",
-      img: "https://thuthuatnhanh.com/wp-content/uploads/2021/11/hinh-anh-chill-dep.jpg",
-    },
-    {
-      name: "Assignment",
-      img: "https://thuthuatnhanh.com/wp-content/uploads/2021/11/hinh-anh-chill-dep.jpg",
-    },
-  ],
-};
+import { WorkspaceInterface } from "../types";
 
 const Header = () => {
   const [theme, setTheme] = useState("default");
   const [toggleNav, setToggleNav] = useState(true);
+  const [workspace, setWorkspace] = useState([]);
+
+  const handleClick = () => {
+    fetchData();
+  };
+
+  const fetchData = async () => {
+    const res = await fetchWorkspace();
+    setWorkspace(res.data);
+  };
+  useEffect(() => {
+    fetchData();
+  }, []);
+  // console.log(workspace);
 
   const changeTheme = (theme: string) => {
     setTheme(theme);
@@ -82,18 +67,31 @@ const Header = () => {
                     <div className="navbar-dropdown">
                       <ul>
                         <h5>Không gian của tôi</h5>
-                        {workspace.myWorkspace.map((ws, index) => (
-                          <li key={index}>
-                            <img src={ws.img} alt="img" />
-                            <span>{ws.name}</span>
+                        {workspace.map((ws: WorkspaceInterface) => (
+                          <li key={ws.workspaceId}>
+                            <img src={ws.workspaceImage} alt="img" />
+                            <span>{ws.workspaceName}</span>
                           </li>
                         ))}
                         <h5>Không gian ưa thích</h5>
-                        {workspace.favWorkspace.map((ws, index) => (
-                          <li key={index}>
-                            <img src={ws.img} alt="img" />
-                            <span>{ws.name}</span>
-                          </li>
+                        {workspace.map((ws: WorkspaceInterface) => (
+                          <Fragment key={ws.workspaceId}>
+                            {ws.isFavorite && (
+                              <li
+                                key={ws.workspaceId}
+                                className="navbar-dropdown-star-items"
+                              >
+                                <div>
+                                  <img src={ws.workspaceImage} alt="img" />
+                                  <span>{ws.workspaceName}</span>
+                                </div>
+                                <div
+                                  onClick={handleClick}
+                                  title="Nhấn để xóa khỏi danh sách ưa thích"
+                                ></div>
+                              </li>
+                            )}
+                          </Fragment>
                         ))}
                       </ul>
                     </div>
@@ -106,10 +104,10 @@ const Header = () => {
                     <div className="navbar-dropdown">
                       <ul>
                         <h5>Đã xem gần đây</h5>
-                        {workspace.myWorkspace.map((ws, index) => (
-                          <li key={index}>
-                            <img src={ws.img} alt="img" />
-                            <span>{ws.name}</span>
+                        {workspace.map((ws: WorkspaceInterface) => (
+                          <li key={ws.workspaceId}>
+                            <img src={ws.workspaceImage} alt="img" />
+                            <span>{ws.workspaceName}</span>
                           </li>
                         ))}
                       </ul>
@@ -122,20 +120,24 @@ const Header = () => {
                     </span>
                     <div className="navbar-dropdown">
                       <ul>
-                        {workspace.myWorkspace.map((ws, index) => (
-                          <li
-                            key={index}
-                            className="navbar-dropdown-star-items"
-                          >
-                            <div>
-                              <img src={ws.img} alt="img" />
-                              <span>{ws.name}</span>
-                            </div>
-                            <div
-                              onClick={() => alert("Đã hủy")}
-                              title="Nhấn để xóa khỏi danh sách ưa thích"
-                            ></div>
-                          </li>
+                        {workspace.map((ws: WorkspaceInterface) => (
+                          <Fragment key={ws.workspaceId}>
+                            {ws.isFavorite && (
+                              <li
+                                key={ws.workspaceId}
+                                className="navbar-dropdown-star-items"
+                              >
+                                <div>
+                                  <img src={ws.workspaceImage} alt="img" />
+                                  <span>{ws.workspaceName}</span>
+                                </div>
+                                <div
+                                  onClick={handleClick}
+                                  title="Nhấn để xóa khỏi danh sách ưa thích"
+                                ></div>
+                              </li>
+                            )}
+                          </Fragment>
                         ))}
                       </ul>
                     </div>
@@ -148,10 +150,10 @@ const Header = () => {
                     <div className="navbar-dropdown">
                       <ul>
                         <h5>Các mẫu hàng đầu</h5>
-                        {workspace.myWorkspace.map((ws, index) => (
-                          <li key={index}>
-                            <img src={ws.img} alt="img" />
-                            <span>{ws.name}</span>
+                        {workspace.map((ws: WorkspaceInterface) => (
+                          <li key={ws.workspaceId}>
+                            <img src={ws.workspaceImage} alt="img" />
+                            <span>{ws.workspaceName}</span>
                           </li>
                         ))}
                       </ul>

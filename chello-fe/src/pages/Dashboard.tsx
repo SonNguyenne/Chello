@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import {
   FaChevronDown,
   FaChevronRight,
@@ -15,53 +15,52 @@ import {
   FaTimes,
   FaUsers,
 } from "react-icons/fa";
+import { fetchWorkspace } from "../apis/workspace.api";
+import InputAdd from "../components/InputAdd";
+import { WorkspaceInterface } from "../types";
 
-const workspace = {
-  myWorkspace: [
-    {
-      id: 1,
-      name: "Không gian 1",
-      img: "https://cdn.pixabay.com/photo/2020/04/30/14/03/mountains-and-hills-5112952__480.jpg",
-    },
-    {
-      id: 2,
-      name: "Lịch học",
-      img: "https://cdn.pixabay.com/photo/2020/04/30/14/03/mountains-and-hills-5112952__480.jpg",
-    },
-    {
-      id: 3,
-      name: "Project",
-      img: "https://cdn.pixabay.com/photo/2020/04/30/14/03/mountains-and-hills-5112952__480.jpg",
-    },
-    {
-      id: 4,
-      name: "Lịch học",
-      img: "https://cdn.pixabay.com/photo/2020/04/30/14/03/mountains-and-hills-5112952__480.jpg",
-    },
-    {
-      id: 5,
-      name: "Project",
-      img: "https://cdn.pixabay.com/photo/2020/04/30/14/03/mountains-and-hills-5112952__480.jpg",
-    },
-  ],
-  favWorkspace: [
-    {
-      name: "Không gian 2",
-      img: "https://cdn.pixabay.com/photo/2020/04/30/14/03/mountains-and-hills-5112952__480.jpg",
-    },
-    {
-      name: "Đồ án",
-      img: "https://cdn.pixabay.com/photo/2020/04/30/14/03/mountains-and-hills-5112952__480.jpg",
-    },
-    {
-      name: "Assignment",
-      img: "https://cdn.pixabay.com/photo/2020/04/30/14/03/mountains-and-hills-5112952__480.jpg",
-    },
-  ],
-};
 const Dashboard = () => {
   const [showSlideMenu, setShowSlideMenu] = useState(true);
-  const [showWorkspaceInfo, setShowWorkspaceInfo] = useState(0);
+  const [showWorkspaceInfo, setShowWorkspaceInfo] = useState("");
+  const [workspace, setWorkspace] = useState([]);
+  const [showAddWorkspace, setShowAddWorkspace] = useState(false);
+  const [newWorkspaceName, setNewWorkspaceName] = useState("");
+
+  const handleMenuLeftClick = (workspaceId: string | undefined) => {
+    if (workspaceId === undefined || workspaceId === showWorkspaceInfo) {
+      setShowWorkspaceInfo("0");
+    } else setShowWorkspaceInfo(workspaceId);
+  };
+
+  const handleSetNewWorkspaceName = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setNewWorkspaceName(e.target.value);
+  };
+  const handleAddNewWorkspace = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      handleSubmitAddWorkspace();
+      setNewWorkspaceName("");
+    }
+  };
+  const handleSubmitAddWorkspace = () => {
+    if (newWorkspaceName === "") {
+      return alert("Please enter card name");
+    }
+    // setWorkspace(workspace);
+    setShowAddWorkspace(!showAddWorkspace);
+  };
+  const handleShowWorkspaceAdd = () => {
+    setShowAddWorkspace(!showAddWorkspace);
+  };
+
+  const fetchData = async () => {
+    const res = await fetchWorkspace();
+    setWorkspace(res.data);
+  };
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   return (
     <div className="dashboard-container">
@@ -104,31 +103,43 @@ const Dashboard = () => {
           <hr />
           <li>
             <div>
-              <div className="slide-menu-workspace-title">
+              <div
+                className="slide-menu-workspace-title"
+                onClick={handleShowWorkspaceAdd}
+              >
                 <span>Các không gian làm việc</span>
                 <span>
                   <FaPlus />
                 </span>
               </div>
+              {showAddWorkspace && (
+                <div className="slide-menu-input-container">
+                  <InputAdd
+                    handleSetNewName={handleSetNewWorkspaceName}
+                    handleAddNew={(e) => handleAddNewWorkspace(e)}
+                    handleSubmitAdd={handleSubmitAddWorkspace}
+                    handleShowAdd={handleShowWorkspaceAdd}
+                    placeholder={"không gian"}
+                  />
+                </div>
+              )}
               <div className="slide-menu-workspace-list">
                 <ul>
-                  {workspace.myWorkspace.map((ws, index) => (
-                    <li key={index}>
+                  {workspace?.map((ws: WorkspaceInterface) => (
+                    <li key={ws.workspaceId}>
                       <div
                         className="list-workspace-title"
-                        onClick={() =>
-                          setShowWorkspaceInfo(
-                            ws.id === showWorkspaceInfo ? 0 : ws.id
-                          )
-                        }
+                        onClick={() => {
+                          handleMenuLeftClick(ws.workspaceId);
+                        }}
                       >
                         <div>
-                          <img src={ws.img} alt="ws" />
-                          <span>{ws.name}</span>
+                          <img src={ws.workspaceImage} alt="ws" />
+                          <span>{ws.workspaceName}</span>
                         </div>
                         <FaChevronDown />
                       </div>
-                      {ws.id === showWorkspaceInfo && (
+                      {ws.workspaceId === showWorkspaceInfo && (
                         <div className="workspace-dropdown">
                           <ul>
                             <li>
@@ -214,16 +225,22 @@ const Dashboard = () => {
             <h3>Các bảng ưa thích</h3>
           </div>
           <div className="content-body">
-            {workspace.myWorkspace.map((ws, index) => (
-              <div key={index}>
-                <img src={ws.img} alt="" />
-                <span className="content-body-star-name">{ws.name}</span>
-                <span
-                  className="content-body-star-icon"
-                  onClick={() => alert("Đã hủy")}
-                  title="Nhấn để xóa khỏi danh sách ưa thích"
-                ></span>
-              </div>
+            {workspace?.map((ws: WorkspaceInterface) => (
+              <Fragment key={ws.workspaceId}>
+                {ws.isFavorite && (
+                  <div key={ws.workspaceId}>
+                    <img src={ws.workspaceImage} alt="" />
+                    <span className="content-body-star-name">
+                      {ws.workspaceName}
+                    </span>
+                    <span
+                      className="content-body-star-icon"
+                      onClick={() => alert("Đã hủy")}
+                      title="Nhấn để xóa khỏi danh sách ưa thích"
+                    ></span>
+                  </div>
+                )}
+              </Fragment>
             ))}
           </div>
         </section>
@@ -233,14 +250,16 @@ const Dashboard = () => {
             <h3>Đã xem gần đây</h3>
           </div>
           <div className="content-body">
-            {workspace.myWorkspace.map((ws, index) => (
-              <div key={index}>
-                <img src={ws.img} alt="" />
-                <span className="content-body-star-name">{ws.name}</span>
+            {workspace?.map((ws: WorkspaceInterface) => (
+              <div key={ws.workspaceId}>
+                <img src={ws.workspaceImage} alt="" />
+                <span className="content-body-star-name">
+                  {ws.workspaceName}
+                </span>
                 <span
-                  className="content-body-star-icon"
+                  className="content-body-unstar-icon"
                   onClick={() => alert("Đã hủy")}
-                  title="Nhấn để xóa khỏi danh sách ưa thích"
+                  title="Nhấn để thêm vào danh sách ưa thích"
                 ></span>
               </div>
             ))}
@@ -252,14 +271,16 @@ const Dashboard = () => {
             <h3>CÁC KHÔNG GIAN LÀM VIỆC KHÁCH</h3>
           </span>
           <div className="content-body">
-            {workspace.myWorkspace.map((ws, index) => (
-              <div key={index}>
-                <img src={ws.img} alt="" />
-                <span className="content-body-star-name">{ws.name}</span>
+            {workspace?.map((ws: WorkspaceInterface) => (
+              <div key={ws.workspaceId}>
+                <img src={ws.workspaceImage} alt="" />
+                <span className="content-body-star-name">
+                  {ws.workspaceName}
+                </span>
                 <span
-                  className="content-body-star-icon"
+                  className="content-body-unstar-icon"
                   onClick={() => alert("Đã hủy")}
-                  title="Nhấn để xóa khỏi danh sách ưa thích"
+                  title="Nhấn để thêm vào danh sách ưa thích"
                 ></span>
               </div>
             ))}
@@ -270,14 +291,16 @@ const Dashboard = () => {
             <h3>CÁC KHÔNG GIAN LÀM VIỆC CỦA BẠN</h3>
           </span>
           <div className="content-body">
-            {workspace.myWorkspace.map((ws, index) => (
-              <div key={index}>
-                <img src={ws.img} alt="" />
-                <span className="content-body-star-name">{ws.name}</span>
+            {workspace?.map((ws: WorkspaceInterface) => (
+              <div key={ws.workspaceId}>
+                <img src={ws.workspaceImage} alt="" />
+                <span className="content-body-star-name">
+                  {ws.workspaceName}
+                </span>
                 <span
-                  className="content-body-star-icon"
+                  className="content-body-unstar-icon"
                   onClick={() => alert("Đã hủy")}
-                  title="Nhấn để xóa khỏi danh sách ưa thích"
+                  title="Nhấn để thêm vào danh sách ưa thích"
                 ></span>
               </div>
             ))}
