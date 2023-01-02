@@ -55,7 +55,8 @@ var createWorkspace = function (req, res) { return __awaiter(void 0, void 0, voi
                 newWs = {
                     isPublic: req.body.isPublic,
                     isFavorite: req.body.isFavorite,
-                    workspaceName: req.body.workspaceName
+                    workspaceName: req.body.workspaceName,
+                    workspaceImage: req.body.workspaceImage
                 };
                 return [4, (0, lite_1.addDoc)((0, lite_1.collection)(db, "workspace"), newWs)];
             case 1:
@@ -81,7 +82,8 @@ var getWorkspace = function (req, res) { return __awaiter(void 0, void 0, void 0
                         workspaceId: doc.id,
                         isPublic: doc.data().isPublic,
                         isFavorite: doc.data().isFavorite,
-                        workspaceName: doc.data().workspaceName
+                        workspaceName: doc.data().workspaceName,
+                        workspaceImage: doc.data().workspaceImage
                     });
                 });
                 return [2, res.json(data)];

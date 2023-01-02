@@ -6,6 +6,8 @@ interface Workspace {
   isPublic: boolean
   isFavorite: boolean
   workspaceName: string
+  workspaceImage?:string
+
 }
 
 const index = (req: Request, res: Response) => {
@@ -34,7 +36,8 @@ const createWorkspace = async (req: Request, res: Response) => {
   const newWs: Workspace = {
     isPublic: req.body.isPublic,
     isFavorite: req.body.isFavorite,
-    workspaceName:req.body.workspaceName
+    workspaceName:req.body.workspaceName,
+    workspaceImage:req.body.workspaceImage
   }
 
   await addDoc(collection(db, "workspace"),newWs);
@@ -57,7 +60,8 @@ const getWorkspace = async (req: Request, res: Response) => {
       workspaceId: doc.id,
       isPublic:  doc.data().isPublic,
       isFavorite:  doc.data().isFavorite,
-      workspaceName: doc.data().workspaceName})
+      workspaceName: doc.data().workspaceName,
+      workspaceImage: doc.data().workspaceImage})
   });
 
   return res.json(data);
@@ -77,7 +81,8 @@ const updateWorkspace = async (req: Request, res: Response) => {
   await setDoc(doc(db, "workspace", req.params.wsId), {
     isPublic: req.body.isPublic,
     isFavorite: req.body.isFavorite,
-    workspaceName:req.body.workspaceName
+    workspaceName:req.body.workspaceName,
+    workspaceImage: req.body.workspaceImage
   });
 
 
