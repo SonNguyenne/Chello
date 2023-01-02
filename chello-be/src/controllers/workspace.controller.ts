@@ -3,8 +3,8 @@ import {  addDoc, collection ,deleteDoc,doc,getDocs,getFirestore, setDoc } from 
 import _ from 'lodash'
 interface Workspace {
   workspaceId?: string;
-  isPublic: boolean
-  isFavorite: boolean
+  isPublic?: boolean
+  isFavorite?: boolean
   workspaceName: string
   workspaceImage?:string
 
@@ -34,10 +34,10 @@ const createWorkspace = async (req: Request, res: Response) => {
 
   //Add
   const newWs: Workspace = {
-    isPublic: req.body.isPublic,
-    isFavorite: req.body.isFavorite,
+    isPublic: true,
+    isFavorite: false,
     workspaceName:req.body.workspaceName,
-    workspaceImage:req.body.workspaceImage
+    workspaceImage:'https://digitalsynopsis.com/wp-content/uploads/2017/07/beautiful-color-ui-gradients-backgrounds-relay.png'
   }
 
   await addDoc(collection(db, "workspace"),newWs);
