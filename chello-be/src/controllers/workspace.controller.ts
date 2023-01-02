@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import {  addDoc, collection ,doc,getDocs,getFirestore } from 'firebase/firestore/lite';
+import {  addDoc, collection ,doc,getDocs,getFirestore, setDoc } from 'firebase/firestore/lite';
 
 interface Workspace {
   workspaceId: string;
@@ -47,15 +47,42 @@ const createWorkspace = async (req: Request, res: Response) => {
 const getWorkspace = async (req: Request, res: Response) => {
   const db = getFirestore()
 
-  const citiesCol = collection(db, 'workspace');
-  const citySnapshot = await getDocs(citiesCol);
-  const wsList = citySnapshot.docs.map(doc => doc.data());
-  // const wsId = citySnapshot.docs.map(doc => doc.id);
-  const data = { wsList}
+  const data: Workspace[] = []
 
+  const citiesCol = collection(db, 'workspace');
+  
+  const citySnapshot = await getDocs(citiesCol);
+ 
+  citySnapshot.docs.map(doc => {
+    data.push({
+      workspaceId: doc.id,
+      isPublic:  doc.data().isPublic,
+      isFavorite:  doc.data().isFavorite,
+      workspaceName: doc.data().workspaceName})
+  });
 
   return res.json(data);
 }
 
-export { index, createWorkspace, getWorkspace } ;
+
+const updateWorkspace = async (req: Request, res: Response) => {
+  const db = getFirestore()
+
+  // const citiesCol = collection(db, 'workspace');
+  // const citySnapshot = await getDocs(citiesCol);
+  // const wsList = citySnapshot.docs.map(doc => doc.data());
+  // const wsId = citySnapshot.docs.map(doc => doc.id);
+  // const data = { wsList}
+
+   // Set/ update
+  const data = await setDoc(doc(db, "workspace", req.body.wsId), {
+    isPublic: req.body.isPublic,
+    isFavorite: req.body.isFavorite,
+    workspaceName:req.body.workspaceName
+  });
+
+
+  return res.json(data);
+}
+export { index, createWorkspace, getWorkspace, updateWorkspace } ;
 

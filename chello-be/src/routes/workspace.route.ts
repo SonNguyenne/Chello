@@ -8,4 +8,7 @@ router.post("/createWorkspace", workspaceController.createWorkspace);
 
 router.get("/getWorkspace", workspaceController.getWorkspace);
 
+router.put("/updateWorkspace", workspaceController.updateWorkspace);
+
+
 export { router as workspaceRouter };
