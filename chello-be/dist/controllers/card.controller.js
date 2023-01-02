@@ -35,93 +35,68 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteWorkspace = exports.updateWorkspace = exports.getWorkspace = exports.createWorkspace = exports.index = void 0;
+exports.createCard = exports.getCards = exports.index = void 0;
 var lite_1 = require("firebase/firestore/lite");
-var lodash_1 = __importDefault(require("lodash"));
 var index = function (req, res) {
-    res.send("workspace index");
+    res.send("profike index");
 };
 exports.index = index;
-var createWorkspace = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var db, newWs;
+var getCards = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var db, val, cardCol, cardSnapshot;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 db = (0, lite_1.getFirestore)();
-                newWs = {
-                    isPublic: req.body.isPublic,
-                    isFavorite: req.body.isFavorite,
-                    workspaceName: req.body.workspaceName,
-                    workspaceImage: req.body.workspaceImage
+                val = [];
+                cardCol = (0, lite_1.collection)(db, 'workspace', req.params.workspace, 'card');
+                return [4, (0, lite_1.getDocs)(cardCol)];
+            case 1:
+                cardSnapshot = _a.sent();
+                return [4, Promise.all(cardSnapshot.docs.map(function (doc) { return __awaiter(void 0, void 0, void 0, function () {
+                        var itemCol, itemSnapshot, item;
+                        return __generator(this, function (_a) {
+                            switch (_a.label) {
+                                case 0:
+                                    itemCol = (0, lite_1.collection)(db, 'workspace', req.params.workspace, 'card', doc.id, 'item');
+                                    return [4, (0, lite_1.getDocs)(itemCol)];
+                                case 1:
+                                    itemSnapshot = _a.sent();
+                                    item = itemSnapshot.docs.map(function (doc) { return doc.data(); });
+                                    val.push({
+                                        cardId: doc.id,
+                                        cardName: doc.data().cardName,
+                                        isActived: doc.data().isActived,
+                                        items: item
+                                    });
+                                    console.log(val);
+                                    return [2];
+                            }
+                        });
+                    }); }))];
+            case 2:
+                _a.sent();
+                return [2, res.json(val)];
+        }
+    });
+}); };
+exports.getCards = getCards;
+var createCard = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var db, newCard;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                db = (0, lite_1.getFirestore)();
+                newCard = {
+                    cardName: req.body.cardName,
+                    isActived: true,
                 };
-                return [4, (0, lite_1.addDoc)((0, lite_1.collection)(db, "workspace"), newWs)];
+                return [4, (0, lite_1.addDoc)((0, lite_1.collection)(db, 'workspace', req.params.workspace, 'card'), newCard)];
             case 1:
                 _a.sent();
-                return [2, res.json(newWs)];
+                return [2, res.json(newCard).status(200)];
         }
     });
 }); };
-exports.createWorkspace = createWorkspace;
-var getWorkspace = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var db, data, wsCol, wsSnapshot;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                db = (0, lite_1.getFirestore)();
-                data = [];
-                wsCol = (0, lite_1.collection)(db, 'workspace');
-                return [4, (0, lite_1.getDocs)(wsCol)];
-            case 1:
-                wsSnapshot = _a.sent();
-                wsSnapshot.docs.map(function (doc) {
-                    data.push({
-                        workspaceId: doc.id,
-                        isPublic: doc.data().isPublic,
-                        isFavorite: doc.data().isFavorite,
-                        workspaceName: doc.data().workspaceName,
-                        workspaceImage: doc.data().workspaceImage
-                    });
-                });
-                return [2, res.json(data)];
-        }
-    });
-}); };
-exports.getWorkspace = getWorkspace;
-var updateWorkspace = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var db;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                db = (0, lite_1.getFirestore)();
-                return [4, (0, lite_1.setDoc)((0, lite_1.doc)(db, "workspace", req.params.wsId), {
-                        isPublic: req.body.isPublic,
-                        isFavorite: req.body.isFavorite,
-                        workspaceName: req.body.workspaceName,
-                        workspaceImage: req.body.workspaceImage
-                    })];
-            case 1:
-                _a.sent();
-                return [2, res.json(lodash_1.default.omit(req.body, 'wsId'))];
-        }
-    });
-}); };
-exports.updateWorkspace = updateWorkspace;
-var deleteWorkspace = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var db;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                db = (0, lite_1.getFirestore)();
-                return [4, (0, lite_1.deleteDoc)((0, lite_1.doc)(db, "workspace", req.params.wsId))];
-            case 1:
-                _a.sent();
-                return [2, res.json('deleted successfully')];
-        }
-    });
-}); };
-exports.deleteWorkspace = deleteWorkspace;
-//# sourceMappingURL=workspace.controller.js.map
+exports.createCard = createCard;
+//# sourceMappingURL=card.controller.js.map

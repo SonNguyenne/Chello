@@ -12,6 +12,7 @@ var dashboard_route_1 = require("./dashboard.route");
 var profile_route_1 = require("./profile.route");
 var workspace_route_1 = require("./workspace.route");
 var authentication_route_1 = require("./authentication.route");
+var card_route_1 = require("./card.route");
 var swaggerDocument = yamljs_1.default.load(path_1.default.resolve(__dirname, "../../src/swagger.yaml"));
 var router = express_1.default.Router();
 var webRoutes = function (app) {
@@ -19,6 +20,7 @@ var webRoutes = function (app) {
     app.use("/profile", profile_route_1.profileRouter);
     app.use("/workspace", workspace_route_1.workspaceRouter);
     app.use("/authentication", authentication_route_1.authenticationRouter);
+    app.use("/card", card_route_1.cardRouter);
     app.use("/api-docs", swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(swaggerDocument));
     return app.use("/", router);
 };

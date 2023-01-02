@@ -51,11 +51,11 @@ const getWorkspace = async (req: Request, res: Response) => {
 
   const data: Workspace[] = []
 
-  const citiesCol = collection(db, 'workspace');
+  const wsCol = collection(db, 'workspace');
   
-  const citySnapshot = await getDocs(citiesCol);
+  const wsSnapshot = await getDocs(wsCol);
  
-  citySnapshot.docs.map(doc => {
+  wsSnapshot.docs.map(doc => {
     data.push({
       workspaceId: doc.id,
       isPublic:  doc.data().isPublic,
