@@ -43,15 +43,12 @@ var index = function (req, res) {
 };
 exports.index = index;
 var createWorkspace = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var db, wsTable, wsDoc, newWs, docRef;
+    var db, newWs, docRef;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 db = (0, lite_1.getFirestore)();
-                wsTable = (0, lite_1.collection)(db, 'workspace');
-                wsDoc = (0, lite_1.doc)(wsTable);
                 newWs = {
-                    workspaceId: wsDoc.id,
                     isPublic: req.body.isPublic,
                     isFavorite: req.body.isFavorite,
                     workspaceName: req.body.workspaceName
