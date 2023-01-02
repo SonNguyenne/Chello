@@ -1,6 +1,14 @@
 import { Request, Response } from "express";
-// import { getFirestore } from 'firebase/firestore/lite';
-import { getFirestore } from 'firebase-admin/firestore';
+import {  addDoc, collection ,deleteDoc,doc,getDocs,getFirestore, setDoc } from 'firebase/firestore/lite';
+import _ from 'lodash'
+interface Workspace {
+  workspaceId?: string;
+  isPublic?: boolean
+  isFavorite?: boolean
+  workspaceName: string
+  workspaceImage?:string
+
+}
 
 const index = (req: Request, res: Response) => {
   res.send("workspace index");
@@ -9,19 +17,85 @@ const index = (req: Request, res: Response) => {
 const createWorkspace = async (req: Request, res: Response) => {
   const db = getFirestore()
   
+  // const wsTable = collection(db, 'workspace');
 
-  const docRef = await db.collection('cities');
+  //getID by doc
+  // const wsDoc =  doc(wsTable);
+  // const wsId = wsSnapshot.docs.map(doc => doc.id);
 
-  console.log(docRef)
-  // await docRef.set({
-  //   first: 'Ada',
-  //   last: 'Lovelace',
-  //   born: 1815
+
+  // Set/ update
+  //  await setDoc(doc(db, "table", "ID"), {
+  //   name: "dit me may",
+  //   state: "CA",
+  //   country: "USA",
   // });
 
-  // docRef.forEach((doc) => {
-  //   console.log(doc.id, '=>', doc.data());
-  // });
+
+  //Add
+  const newWs: Workspace = {
+    isPublic: true,
+    isFavorite: false,
+    workspaceName:req.body.workspaceName,
+    workspaceImage:'https://digitalsynopsis.com/wp-content/uploads/2017/07/beautiful-color-ui-gradients-backgrounds-relay.png'
+  }
+
+  await addDoc(collection(db, "workspace"),newWs);
+
+
+  return res.json(newWs);;
 }
 
-export { index, createWorkspace } ;
+const getWorkspace = async (req: Request, res: Response) => {
+  const db = getFirestore()
+
+  const data: Workspace[] = []
+
+  const wsCol = collection(db, 'workspace');
+  
+  const wsSnapshot = await getDocs(wsCol);
+ 
+  wsSnapshot.docs.map(doc => {
+    data.push({
+      workspaceId: doc.id,
+      isPublic:  doc.data().isPublic,
+      isFavorite:  doc.data().isFavorite,
+      workspaceName: doc.data().workspaceName,
+      workspaceImage: doc.data().workspaceImage})
+  });
+
+  return res.json(data);
+}
+
+
+const updateWorkspace = async (req: Request, res: Response) => {
+  const db = getFirestore()
+
+  // const citiesCol = collection(db, 'workspace');
+  // const citySnapshot = await getDocs(citiesCol);
+  // const wsList = citySnapshot.docs.map(doc => doc.data());
+  // const wsId = citySnapshot.docs.map(doc => doc.id);
+  // const data = { wsList}
+
+   // Set/ update
+  await setDoc(doc(db, "workspace", req.params.wsId), {
+    isPublic: req.body.isPublic,
+    isFavorite: req.body.isFavorite,
+    workspaceName:req.body.workspaceName,
+    workspaceImage: req.body.workspaceImage
+  });
+
+
+  return res.json(_.omit(req.body,'wsId'));
+}
+
+
+const deleteWorkspace = async (req: Request, res: Response) => {
+  const db = getFirestore()
+
+  await deleteDoc(doc(db, "workspace", req.params.wsId));
+
+  return res.json('deleted successfully');
+}
+export { index, createWorkspace, getWorkspace, updateWorkspace, deleteWorkspace } ;
+

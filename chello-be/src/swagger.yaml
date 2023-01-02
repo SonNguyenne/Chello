@@ -14,7 +14,7 @@ externalDocs:
   # description: Find out more about Swagger
   # url: http://swagger.io
 servers:
-  - url: https://chello.abc.xyz
+  - url: https://chello-be-a5ll.onrender.com
 tags:
   - name: user
     description: Operations about user
@@ -184,7 +184,7 @@ paths:
           description: Invalid userId supplied
         "404":
           description: User not found
-  /workspace:
+  /workspace/createWorkspace:
     post:
       tags:
         - workspace
@@ -213,13 +213,13 @@ paths:
             application/xml:
               schema:
                 $ref: "#/components/schemas/Workspace"
-  /workspaces:
+  /workspace/getWorkspace:
     get:
       tags:
         - workspace
       summary: Show list of workspaces
       description: This can only be done by the logged in user.
-      operationId: showListWorkspaces
+      operationId: getWorkspace
       responses:
         "200":
           description: successful operation

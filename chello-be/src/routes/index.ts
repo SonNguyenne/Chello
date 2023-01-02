@@ -6,6 +6,7 @@ import { dashboardRouter } from "./dashboard.route";
 import { profileRouter } from "./profile.route";
 import { workspaceRouter } from "./workspace.route";
 import { authenticationRouter } from "./authentication.route";
+import { cardRouter } from "./card.route";
 const swaggerDocument = YAML.load(
   path.resolve(__dirname, "../../src/swagger.yaml")
 );
@@ -17,6 +18,7 @@ export const webRoutes = (app: any) => {
   app.use("/profile", profileRouter);
   app.use("/workspace", workspaceRouter);
   app.use("/authentication", authenticationRouter);
+  app.use("/card", cardRouter);
   app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
   return app.use("/", router);
