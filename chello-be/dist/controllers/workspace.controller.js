@@ -35,15 +35,19 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateWorkspace = exports.getWorkspace = exports.createWorkspace = exports.index = void 0;
+exports.deleteWorkspace = exports.updateWorkspace = exports.getWorkspace = exports.createWorkspace = exports.index = void 0;
 var lite_1 = require("firebase/firestore/lite");
+var lodash_1 = __importDefault(require("lodash"));
 var index = function (req, res) {
     res.send("workspace index");
 };
 exports.index = index;
 var createWorkspace = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var db, newWs, docRef;
+    var db, newWs;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -55,8 +59,8 @@ var createWorkspace = function (req, res) { return __awaiter(void 0, void 0, voi
                 };
                 return [4, (0, lite_1.addDoc)((0, lite_1.collection)(db, "workspace"), newWs)];
             case 1:
-                docRef = _a.sent();
-                return [2, docRef];
+                _a.sent();
+                return [2, res.json(newWs)];
         }
     });
 }); };
@@ -86,21 +90,35 @@ var getWorkspace = function (req, res) { return __awaiter(void 0, void 0, void 0
 }); };
 exports.getWorkspace = getWorkspace;
 var updateWorkspace = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var db, data;
+    var db;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 db = (0, lite_1.getFirestore)();
-                return [4, (0, lite_1.setDoc)((0, lite_1.doc)(db, "workspace", req.body.wsId), {
+                return [4, (0, lite_1.setDoc)((0, lite_1.doc)(db, "workspace", req.params.wsId), {
                         isPublic: req.body.isPublic,
                         isFavorite: req.body.isFavorite,
                         workspaceName: req.body.workspaceName
                     })];
             case 1:
-                data = _a.sent();
-                return [2, res.json(data)];
+                _a.sent();
+                return [2, res.json(lodash_1.default.omit(req.body, 'wsId'))];
         }
     });
 }); };
 exports.updateWorkspace = updateWorkspace;
+var deleteWorkspace = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var db;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                db = (0, lite_1.getFirestore)();
+                return [4, (0, lite_1.deleteDoc)((0, lite_1.doc)(db, "workspace", req.params.wsId))];
+            case 1:
+                _a.sent();
+                return [2, res.json('deleted successfully')];
+        }
+    });
+}); };
+exports.deleteWorkspace = deleteWorkspace;
 //# sourceMappingURL=workspace.controller.js.map

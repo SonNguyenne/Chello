@@ -8,7 +8,9 @@ router.post("/createWorkspace", workspaceController.createWorkspace);
 
 router.get("/getWorkspace", workspaceController.getWorkspace);
 
-router.put("/updateWorkspace", workspaceController.updateWorkspace);
+router.put("/updateWorkspace/:wsId", workspaceController.updateWorkspace);
+
+router.delete("/deleteWorkspace/:wsId", workspaceController.deleteWorkspace);
 
 
 export { router as workspaceRouter };

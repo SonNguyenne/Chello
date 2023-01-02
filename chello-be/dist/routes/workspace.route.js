@@ -34,5 +34,6 @@ var workspaceController = __importStar(require("../controllers/workspace.control
 router.get("/", workspaceController.index);
 router.post("/createWorkspace", workspaceController.createWorkspace);
 router.get("/getWorkspace", workspaceController.getWorkspace);
-router.put("/updateWorkspace", workspaceController.updateWorkspace);
+router.put("/updateWorkspace/:wsId", workspaceController.updateWorkspace);
+router.delete("/deleteWorkspace/:wsId", workspaceController.deleteWorkspace);
 //# sourceMappingURL=workspace.route.js.map

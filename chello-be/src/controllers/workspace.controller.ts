@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import {  addDoc, collection ,doc,getDocs,getFirestore, setDoc } from 'firebase/firestore/lite';
-
+import {  addDoc, collection ,deleteDoc,doc,getDocs,getFirestore, setDoc } from 'firebase/firestore/lite';
+import _ from 'lodash'
 interface Workspace {
   workspaceId?: string;
   isPublic: boolean
@@ -37,10 +37,10 @@ const createWorkspace = async (req: Request, res: Response) => {
     workspaceName:req.body.workspaceName
   }
 
-  const docRef = await addDoc(collection(db, "workspace"),newWs);
+  await addDoc(collection(db, "workspace"),newWs);
 
 
-  return docRef;
+  return res.json(newWs);;
 }
 
 const getWorkspace = async (req: Request, res: Response) => {
@@ -74,14 +74,23 @@ const updateWorkspace = async (req: Request, res: Response) => {
   // const data = { wsList}
 
    // Set/ update
-  const data = await setDoc(doc(db, "workspace", req.body.wsId), {
+  await setDoc(doc(db, "workspace", req.params.wsId), {
     isPublic: req.body.isPublic,
     isFavorite: req.body.isFavorite,
     workspaceName:req.body.workspaceName
   });
 
 
-  return res.json(data);
+  return res.json(_.omit(req.body,'wsId'));
 }
-export { index, createWorkspace, getWorkspace, updateWorkspace } ;
+
+
+const deleteWorkspace = async (req: Request, res: Response) => {
+  const db = getFirestore()
+
+  await deleteDoc(doc(db, "workspace", req.params.wsId));
+
+  return res.json('deleted successfully');
+}
+export { index, createWorkspace, getWorkspace, updateWorkspace, deleteWorkspace } ;
 
