@@ -62,7 +62,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [workspace]);
 
   return (
     <div className="dashboard-container">

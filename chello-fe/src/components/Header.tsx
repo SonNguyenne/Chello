@@ -11,27 +11,58 @@ import {
   FaSignInAlt,
 } from "react-icons/fa";
 import { Link, Outlet } from "react-router-dom";
-import { fetchWorkspace } from "../apis/workspace.api";
+import { createWorkspace, fetchWorkspace } from "../apis/workspace.api";
 import "../App.css";
 import { WorkspaceInterface } from "../types";
+import Modal from "./Modal";
 
 const Header = () => {
+  const [refresh, setRefresh] = useState(false);
   const [theme, setTheme] = useState("default");
   const [toggleNav, setToggleNav] = useState(true);
   const [workspace, setWorkspace] = useState([]);
+  const [toggleModal, setToggleModal] = useState(false);
+  const [modalName, setModalName] = useState("");
+  const [newWorkspaceName, setNewWorkspaceName] = useState("");
 
-  const handleClick = () => {
+  const onRefresh = () => {
+    setRefresh(!refresh);
+  };
+
+  const handleClickToggleModal = (name: string) => {
+    handleToggleModal();
+    handleModalName(name);
+  };
+  const handleToggleModal = () => {
+    setToggleModal(!toggleModal);
+  };
+  const handleModalName = (name: string) => {
+    setModalName(name);
+  };
+
+  const handleSetNewWorkspaceName = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setNewWorkspaceName(e.target.value);
+  };
+
+  const handleSubmitAddWorkspace = async () => {
+    if (newWorkspaceName === "") {
+      return alert("Please enter card name");
+    }
+    await createWorkspace({ workspaceName: newWorkspaceName });
+    setToggleModal(!toggleModal);
     fetchData();
   };
 
   const fetchData = async () => {
     const res = await fetchWorkspace();
     setWorkspace(res.data);
+    onRefresh();
   };
   useEffect(() => {
     fetchData();
-  }, []);
-  // console.log(workspace);
+  }, [refresh]);
 
   const changeTheme = (theme: string) => {
     setTheme(theme);
@@ -40,6 +71,14 @@ const Header = () => {
   return (
     <>
       <header className={theme}>
+        {toggleModal && (
+          <Modal
+            name={modalName}
+            handleToggleModal={handleToggleModal}
+            handleSubmit={handleSubmitAddWorkspace}
+            handleSetNewWorkspaceName={handleSetNewWorkspaceName}
+          />
+        )}
         <div className="navbar">
           {/* Left */}
           <div className="navbar-left">
@@ -85,10 +124,7 @@ const Header = () => {
                                   <img src={ws.workspaceImage} alt="img" />
                                   <span>{ws.workspaceName}</span>
                                 </div>
-                                <div
-                                  onClick={handleClick}
-                                  title="Nhấn để xóa khỏi danh sách ưa thích"
-                                ></div>
+                                <div title="Nhấn để xóa khỏi danh sách ưa thích"></div>
                               </li>
                             )}
                           </Fragment>
@@ -131,10 +167,7 @@ const Header = () => {
                                   <img src={ws.workspaceImage} alt="img" />
                                   <span>{ws.workspaceName}</span>
                                 </div>
-                                <div
-                                  onClick={handleClick}
-                                  title="Nhấn để xóa khỏi danh sách ưa thích"
-                                ></div>
+                                <div title="Nhấn để xóa khỏi danh sách ưa thích"></div>
                               </li>
                             )}
                           </Fragment>
@@ -167,7 +200,7 @@ const Header = () => {
                     <div className="navbar-dropdown">
                       <ul>
                         <li className="navbar-dropdown-icon-items">
-                          <div>
+                          <div onClick={() => handleClickToggleModal("bảng")}>
                             <span>Tạo bảng mới</span>
                             <p>
                               Một bảng được tạo thành từ các thẻ được sắp xếp
@@ -190,7 +223,9 @@ const Header = () => {
                           </div>
                         </li>
                         <li className="navbar-dropdown-icon-items">
-                          <div>
+                          <div
+                            onClick={() => handleClickToggleModal("không gian")}
+                          >
                             <span>Tạo không gian làm việc</span>
                             <p>
                               Một Không gian làm việc là tập hợp các bảng và mọi
