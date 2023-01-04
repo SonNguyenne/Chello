@@ -1,40 +1,37 @@
-import React from "react";
+import React, { FC } from "react";
 import { FaTimes } from "react-icons/fa";
 
 type ModalInterface = {
   name: string;
+  children: React.ReactNode[] | React.ReactNode;
+  type: "create" | "update" | "delete";
   handleToggleModal: () => void;
   handleSubmit?: () => void;
-  handleSetNewWorkspaceName?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
-const Modal = (props: ModalInterface) => {
-  const { name, handleToggleModal, handleSubmit, handleSetNewWorkspaceName } =
-    props;
+const Modal: FC<ModalInterface> = (props: ModalInterface) => {
+  const { name, children, type, handleToggleModal, handleSubmit } = props;
 
   return (
     <div className="modal-overlay">
       <div className="modal-container">
         <div className="modal-header">
-          <span>Tạo {name} mới</span>
+          <span>
+            {type === "create" && `Tạo ${name} mới`}
+            {type === "update" && `Chỉnh sửa ${name}`}
+            {type === "delete" && `Xóa ${name}?`}
+          </span>
           <span onClick={handleToggleModal}>
             <FaTimes />
           </span>
         </div>
-        <div className="modal-body">
-          <label htmlFor="modal-input">Tên {name}</label>
-          <input
-            type="text"
-            id="modal-input"
-            onChange={handleSetNewWorkspaceName}
-          />
-        </div>
+        {children}
         <hr />
         <div className="modal-footer">
           <button className="btn-close" onClick={handleToggleModal}>
             Hủy
           </button>
-          <button onClick={handleSubmit}>Thêm {name}</button>
+          <button onClick={handleSubmit}>Đồng ý</button>
         </div>
       </div>
     </div>

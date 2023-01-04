@@ -1,22 +1,18 @@
 import React, { Fragment, useEffect, useState } from "react";
 import {
-  FaChevronDown,
   FaChevronRight,
-  FaCog,
   FaHome,
-  FaImage,
   FaInfoCircle,
   FaLayerGroup,
   FaPlus,
   FaRegClock,
   FaRegStar,
-  FaStar,
   FaTable,
   FaTimes,
-  FaUsers,
 } from "react-icons/fa";
 import { createWorkspace, fetchWorkspace } from "../apis/workspace.api";
 import InputAdd from "../components/InputAdd";
+import SlideMenu from "../components/SlideMenu";
 import { WorkspaceInterface } from "../types";
 
 const Dashboard = () => {
@@ -109,7 +105,7 @@ const Dashboard = () => {
                 className="slide-menu-workspace-title"
                 onClick={handleShowWorkspaceAdd}
               >
-                <span>Các không gian làm việc</span>
+                <span>Các không gian công khai</span>
                 <span>
                   <FaPlus />
                 </span>
@@ -125,97 +121,26 @@ const Dashboard = () => {
                   />
                 </div>
               )}
-              <div className="slide-menu-workspace-list">
-                <ul>
-                  {workspace?.map((ws: WorkspaceInterface) => (
-                    <li key={ws.workspaceId}>
-                      <div
-                        className="list-workspace-title"
-                        onClick={() => {
-                          handleMenuLeftClick(ws.workspaceId);
-                        }}
-                      >
-                        <div>
-                          <img src={ws.workspaceImage} alt="ws" />
-                          <span>{ws.workspaceName}</span>
-                        </div>
-                        <FaChevronDown />
-                      </div>
-                      {ws.workspaceId === showWorkspaceInfo && (
-                        <div className="workspace-dropdown">
-                          <ul>
-                            <li>
-                              <div className="workspace-dropdown-items">
-                                <div>
-                                  <span>
-                                    <FaTable />
-                                  </span>
-                                  <span>Bảng</span>
-                                </div>
-                                <span className="workspace-downdown-items-icons">
-                                  <FaChevronRight />
-                                </span>
-                              </div>
-                            </li>
-                            <li>
-                              <div className="workspace-dropdown-items">
-                                <div>
-                                  <span>
-                                    <FaStar />
-                                  </span>
-                                  <span>Điểm nổi bật</span>
-                                </div>
-                                <span className="workspace-downdown-items-icons">
-                                  <FaChevronRight />
-                                </span>
-                              </div>
-                            </li>
-                            <li>
-                              <div className="workspace-dropdown-items">
-                                <div>
-                                  <span>
-                                    <FaImage />
-                                  </span>
-                                  <span>Hình</span>
-                                </div>
-                                <span className="workspace-downdown-items-icons">
-                                  <FaChevronRight />
-                                </span>
-                              </div>
-                            </li>
-                            <li>
-                              <div className="workspace-dropdown-items">
-                                <div>
-                                  <span>
-                                    <FaUsers />
-                                  </span>
-                                  <span>Thành viên</span>
-                                </div>
-                                <span className="workspace-downdown-items-icons">
-                                  <FaChevronRight />
-                                </span>
-                              </div>
-                            </li>
-                            <li>
-                              <div className="workspace-dropdown-items">
-                                <div>
-                                  <span>
-                                    <FaCog />
-                                  </span>
-                                  <span>Cài đặt</span>
-                                </div>
-                                <span className="workspace-downdown-items-icons">
-                                  <FaChevronRight />
-                                </span>
-                              </div>
-                            </li>
-                          </ul>
-                        </div>
-                      )}
-                    </li>
-                  ))}
-                </ul>
+              <SlideMenu
+                data={workspace}
+                showById={showWorkspaceInfo}
+                isPublic={true}
+                handleClick={handleMenuLeftClick}
+              />
+            </div>
+          </li>
+          <hr />
+          <li>
+            <div>
+              <div className="slide-menu-workspace-title">
+                <span>Không gian riêng tư</span>
               </div>
+              <SlideMenu
+                data={workspace}
+                showById={showWorkspaceInfo}
+                isPublic={false}
+                handleClick={handleMenuLeftClick}
+              />
             </div>
           </li>
         </ul>

@@ -62,6 +62,7 @@ const Header = () => {
   };
   useEffect(() => {
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [refresh]);
 
   const changeTheme = (theme: string) => {
@@ -74,10 +75,19 @@ const Header = () => {
         {toggleModal && (
           <Modal
             name={modalName}
+            type="create"
             handleToggleModal={handleToggleModal}
             handleSubmit={handleSubmitAddWorkspace}
-            handleSetNewWorkspaceName={handleSetNewWorkspaceName}
-          />
+          >
+            <div className="modal-body">
+              <label htmlFor="modal-input">Tên {modalName}</label>
+              <input
+                type="text"
+                id="modal-input"
+                onChange={handleSetNewWorkspaceName}
+              />
+            </div>
+          </Modal>
         )}
         <div className="navbar">
           {/* Left */}

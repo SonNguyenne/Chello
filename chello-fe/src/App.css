@@ -490,7 +490,7 @@ header.light * {
 }
 .dashboard-container .slide-menu .slide-menu-workspace-list {
   overflow-y: auto;
-  height: 650px;
+  /* height: 650px; */
 }
 .dashboard-container
   .slide-menu
@@ -681,6 +681,7 @@ header.light * {
     transition: all 0.2s ease-in-out;
     top: 0;
     width: 0;
+    overflow: auto;
   }
   .dashboard-container .content {
     width: 100%;
@@ -1307,9 +1308,10 @@ header.light * {
   display: flex;
   flex-direction: column;
 }
-.modal-container .modal-body input {
+.modal-container .modal-body input,
+.modal-container .modal-body select {
   padding: 10px;
-  margin-top: 10px;
+  margin: 10px 0;
 }
 .modal-container .modal-footer {
   padding: 0 10px 10px 10px;

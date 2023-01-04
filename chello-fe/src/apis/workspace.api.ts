@@ -25,3 +25,28 @@ export const createWorkspace = async (workspace: WorkspaceInterface) => {
   );
   return res;
 };
+
+export const deleteWorkspace = async (workspace: WorkspaceInterface) => {
+  const res = await axios.post(
+    `${apiUrl}/workspace/deleteWorkspace`,
+    workspace,
+    {
+      headers: {
+        contentType: "application/json",
+      },
+    }
+  );
+  return res;
+};
+
+export const putWorkspace = async (
+  workspace: WorkspaceInterface,
+  workspaceId: string
+) => {
+  const res = await axios.put(`${apiUrl}/workspace/${workspaceId}`, workspace, {
+    headers: {
+      contentType: "application/json",
+    },
+  });
+  return res;
+};
