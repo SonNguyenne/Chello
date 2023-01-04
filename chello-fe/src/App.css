@@ -150,6 +150,13 @@ header.light * {
   .navbar-left
   .navbar-dropdown
   .navbar-dropdown-star-items
+  div:nth-child(2) {
+  font-size: 24px;
+}
+.navbar
+  .navbar-left
+  .navbar-dropdown
+  .navbar-dropdown-star-items
   div:nth-child(2):after,
 .dashboard-container .content .content-body .content-body-star-icon:after,
 .workspace-container .header .workspace-header-star-icon:after {

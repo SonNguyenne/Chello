@@ -15,7 +15,7 @@ import {
   FaTimes,
   FaUsers,
 } from "react-icons/fa";
-import { fetchWorkspace } from "../apis/workspace.api";
+import { createWorkspace, fetchWorkspace } from "../apis/workspace.api";
 import InputAdd from "../components/InputAdd";
 import { WorkspaceInterface } from "../types";
 
@@ -32,6 +32,9 @@ const Dashboard = () => {
     } else setShowWorkspaceInfo(workspaceId);
   };
 
+  const handleShowWorkspaceAdd = () => {
+    setShowAddWorkspace(!showAddWorkspace);
+  };
   const handleSetNewWorkspaceName = (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -43,14 +46,12 @@ const Dashboard = () => {
       setNewWorkspaceName("");
     }
   };
-  const handleSubmitAddWorkspace = () => {
+  const handleSubmitAddWorkspace = async () => {
     if (newWorkspaceName === "") {
       return alert("Please enter card name");
     }
-    // setWorkspace(workspace);
-    setShowAddWorkspace(!showAddWorkspace);
-  };
-  const handleShowWorkspaceAdd = () => {
+    await createWorkspace({ workspaceName: newWorkspaceName });
+    fetchData();
     setShowAddWorkspace(!showAddWorkspace);
   };
 
@@ -58,6 +59,7 @@ const Dashboard = () => {
     const res = await fetchWorkspace();
     setWorkspace(res.data);
   };
+
   useEffect(() => {
     fetchData();
   }, []);
