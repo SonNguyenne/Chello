@@ -16,11 +16,16 @@ import SlideMenu from "../components/SlideMenu";
 import { WorkspaceInterface } from "../types";
 
 const Dashboard = () => {
+  // const [refresh, setRefresh] = useState(false);
   const [showSlideMenu, setShowSlideMenu] = useState(true);
   const [showWorkspaceInfo, setShowWorkspaceInfo] = useState("");
   const [workspace, setWorkspace] = useState([]);
   const [showAddWorkspace, setShowAddWorkspace] = useState(false);
   const [newWorkspaceName, setNewWorkspaceName] = useState("");
+
+  // const onRefresh = () => {
+  //   setRefresh(!refresh);
+  // };
 
   const handleMenuLeftClick = (workspaceId: string | undefined) => {
     if (workspaceId === undefined || workspaceId === showWorkspaceInfo) {
@@ -54,6 +59,7 @@ const Dashboard = () => {
   const fetchData = async () => {
     const res = await fetchWorkspace();
     setWorkspace(res.data);
+    // onRefresh()
   };
 
   useEffect(() => {

@@ -17,17 +17,12 @@ import { WorkspaceInterface } from "../types";
 import Modal from "./Modal";
 
 const Header = () => {
-  const [refresh, setRefresh] = useState(false);
   const [theme, setTheme] = useState("default");
   const [toggleNav, setToggleNav] = useState(true);
   const [workspace, setWorkspace] = useState([]);
   const [toggleModal, setToggleModal] = useState(false);
   const [modalName, setModalName] = useState("");
   const [newWorkspaceName, setNewWorkspaceName] = useState("");
-
-  const onRefresh = () => {
-    setRefresh(!refresh);
-  };
 
   const handleClickToggleModal = (name: string) => {
     handleToggleModal();
@@ -58,12 +53,10 @@ const Header = () => {
   const fetchData = async () => {
     const res = await fetchWorkspace();
     setWorkspace(res.data);
-    onRefresh();
   };
   useEffect(() => {
     fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [refresh]);
+  }, []);
 
   const changeTheme = (theme: string) => {
     setTheme(theme);

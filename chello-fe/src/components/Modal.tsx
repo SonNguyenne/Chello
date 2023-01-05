@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import { FaTimes } from "react-icons/fa";
 
 type ModalInterface = {
-  name: string;
+  name?: string;
   children: React.ReactNode[] | React.ReactNode;
   type: "create" | "update" | "delete";
   handleToggleModal: () => void;
@@ -18,7 +18,7 @@ const Modal: FC<ModalInterface> = (props: ModalInterface) => {
         <div className="modal-header">
           <span>
             {type === "create" && `Tạo ${name} mới`}
-            {type === "update" && `Chỉnh sửa ${name}`}
+            {type === "update" && `Chỉnh sửa`}
             {type === "delete" && `Xóa ${name}?`}
           </span>
           <span onClick={handleToggleModal}>
