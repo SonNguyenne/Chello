@@ -11,6 +11,8 @@ import {
   FaTrash,
 } from "react-icons/fa";
 import { Link } from "react-router-dom";
+// import ReactCSSTransitionGroup from "react-transition-group";
+
 import {
   deleteWorkspace,
   fetchWorkspace,
@@ -246,15 +248,15 @@ const SlideMenu = (props: SlideMenuType) => {
                           <div>
                             <span>
                               {ws.isFavorite === true ? (
-                                <FaStar />
-                              ) : (
                                 <FaTimes />
+                              ) : (
+                                <FaStar />
                               )}
                             </span>
                             <span>
                               {ws.isFavorite === true
-                                ? "Ưa thích"
-                                : "Hủy ưa thích"}
+                                ? "Hủy ưa thích"
+                                : "Ưa thích"}
                             </span>
                           </div>
                           <span className="workspace-downdown-items-icons">
