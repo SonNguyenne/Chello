@@ -53,10 +53,10 @@ var createWorkspace = function (req, res) { return __awaiter(void 0, void 0, voi
             case 0:
                 db = (0, lite_1.getFirestore)();
                 newWs = {
-                    isPublic: req.body.isPublic,
-                    isFavorite: req.body.isFavorite,
+                    isPublic: true,
+                    isFavorite: false,
                     workspaceName: req.body.workspaceName,
-                    workspaceImage: req.body.workspaceImage
+                    workspaceImage: 'https://digitalsynopsis.com/wp-content/uploads/2017/07/beautiful-color-ui-gradients-backgrounds-relay.png'
                 };
                 return [4, (0, lite_1.addDoc)((0, lite_1.collection)(db, "workspace"), newWs)];
             case 1:
