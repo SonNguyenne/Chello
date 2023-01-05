@@ -3,20 +3,18 @@ let router = express.Router();
 import * as workspaceController from "../controllers/workspace.controller";
 import * as cardController from "../controllers/card.controller";
 
-router.get("/:workspace/cards", cardController.getCards);
-
-router.post("/:workspace/createCard", cardController.createCard);
-
-router.patch("/:id", workspaceController.patchWorkspace);
-
-router.delete("/:id", workspaceController.deleteWorkspace);
-
-router.put("/:id", workspaceController.updateWorkspace);
-
-router.post("/", workspaceController.createWorkspace);
-
-router.get("/:id", workspaceController.getWorkspaceById);
-
 router.get("/", workspaceController.getWorkspace);
+router.post("/", workspaceController.createWorkspace);
+router.put("/:workspaceId", workspaceController.updateWorkspace);
+router.patch("/:workspaceId", workspaceController.patchWorkspace);
+router.delete("/:workspaceId", workspaceController.deleteWorkspace);
+router.get("/:workspaceId", workspaceController.getWorkspaceById);
+
+router.get("/:workspaceId/card", cardController.getCard);
+router.post("/:workspaceId/card", cardController.createCard);
+router.put("/:workspaceId/card/:cardId", cardController.updateCard);
+router.patch("/:workspaceId/card/:cardId", cardController.patchCard);
+router.delete("/:workspaceId/card/:cardId", cardController.deleteCard);
+router.get("/:workspaceId/card/:cardId", cardController.getCardById);
 
 export { router as workspaceRouter };

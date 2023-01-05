@@ -1,4 +1,15 @@
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -36,62 +47,42 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createCard = exports.getCards = exports.index = void 0;
+exports.patchCard = exports.getCardById = exports.deleteCard = exports.updateCard = exports.getCard = exports.createCard = void 0;
 var lite_1 = require("firebase/firestore/lite");
-var index = function (req, res) {
-    res.send("profike index");
-};
-exports.index = index;
-var getCards = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var db, val, cardCol, cardSnapshot;
+var getCard = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var db, params, workspaceId, dataCard;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 db = (0, lite_1.getFirestore)();
-                val = [];
-                cardCol = (0, lite_1.collection)(db, 'workspace', req.params.workspace, 'card');
-                return [4, (0, lite_1.getDocs)(cardCol)];
-            case 1:
-                cardSnapshot = _a.sent();
-                return [4, Promise.all(cardSnapshot.docs.map(function (doc) { return __awaiter(void 0, void 0, void 0, function () {
-                        var itemCol, itemSnapshot, item;
-                        return __generator(this, function (_a) {
-                            switch (_a.label) {
-                                case 0:
-                                    itemCol = (0, lite_1.collection)(db, 'workspace', req.params.workspace, 'card', doc.id, 'item');
-                                    return [4, (0, lite_1.getDocs)(itemCol)];
-                                case 1:
-                                    itemSnapshot = _a.sent();
-                                    item = itemSnapshot.docs.map(function (doc) { return doc.data(); });
-                                    val.push({
-                                        cardId: doc.id,
-                                        cardName: doc.data().cardName,
-                                        isActived: doc.data().isActived,
-                                        items: item
-                                    });
-                                    console.log(val);
-                                    return [2];
-                            }
+                params = req.params;
+                workspaceId = params.workspaceId;
+                dataCard = [];
+                return [4, (0, lite_1.getDocs)((0, lite_1.collection)(db, "workspace", workspaceId, "card")).then(function (snap) {
+                        snap.docs.map(function (doc) {
+                            dataCard.push(__assign({}, doc.data()));
                         });
-                    }); }))];
-            case 2:
+                    })];
+            case 1:
                 _a.sent();
-                return [2, res.json(val)];
+                return [2, res.json({ cards: dataCard })];
         }
     });
 }); };
-exports.getCards = getCards;
+exports.getCard = getCard;
 var createCard = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var db, newCard;
+    var db, params, workspaceId, newCard;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 db = (0, lite_1.getFirestore)();
+                params = req.params;
+                workspaceId = params.workspaceId;
                 newCard = {
                     cardName: req.body.cardName,
                     isActived: true,
                 };
-                return [4, (0, lite_1.addDoc)((0, lite_1.collection)(db, 'workspace', req.params.workspace, 'card'), newCard)];
+                return [4, (0, lite_1.addDoc)((0, lite_1.collection)(db, "workspace", workspaceId, "card"), newCard)];
             case 1:
                 _a.sent();
                 return [2, res.json(newCard).status(200)];
@@ -99,4 +90,96 @@ var createCard = function (req, res) { return __awaiter(void 0, void 0, void 0, 
     });
 }); };
 exports.createCard = createCard;
+var updateCard = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var db, params, workspaceId, cardId;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                db = (0, lite_1.getFirestore)();
+                params = req.params;
+                workspaceId = params.workspaceId;
+                cardId = params.cardId;
+                return [4, (0, lite_1.setDoc)((0, lite_1.doc)(db, "workspace", workspaceId, "card", cardId), __assign({}, req.body))
+                        .then(function () {
+                        return res.json(req.body);
+                    })
+                        .catch(function () {
+                        return res.json({ message: "Cập nhật thất bại" });
+                    })];
+            case 1:
+                _a.sent();
+                return [2];
+        }
+    });
+}); };
+exports.updateCard = updateCard;
+var getCardById = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var db, params, workspaceId, cardId;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                db = (0, lite_1.getFirestore)();
+                params = req.params;
+                workspaceId = params.workspaceId;
+                cardId = params.cardId;
+                return [4, (0, lite_1.getDoc)((0, lite_1.doc)((0, lite_1.collection)(db, "workspace", workspaceId, "card"), cardId))
+                        .then(function (snap) {
+                        return res.json(snap.data()).status(200);
+                    })
+                        .catch(function (err) {
+                        return res.json(err.status);
+                    })];
+            case 1:
+                _a.sent();
+                return [2];
+        }
+    });
+}); };
+exports.getCardById = getCardById;
+var patchCard = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var db, params, workspaceId, cardId;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                db = (0, lite_1.getFirestore)();
+                params = req.params;
+                workspaceId = params.workspaceId;
+                cardId = params.cardId;
+                return [4, (0, lite_1.updateDoc)((0, lite_1.doc)((0, lite_1.collection)(db, "workspace", workspaceId, "card"), cardId), req.body)
+                        .then(function () {
+                        return res.json({ message: "Thay đổi thành công" }).status(200);
+                    })
+                        .catch(function () {
+                        return res.json({ message: "Thay đổi thất bại" }).status(400);
+                    })];
+            case 1:
+                _a.sent();
+                return [2];
+        }
+    });
+}); };
+exports.patchCard = patchCard;
+var deleteCard = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var db, params, workspaceId, cardId;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                db = (0, lite_1.getFirestore)();
+                params = req.params;
+                workspaceId = params.workspaceId;
+                cardId = params.cardId;
+                return [4, (0, lite_1.deleteDoc)((0, lite_1.doc)(db, "workspace", workspaceId, "card", cardId))
+                        .then(function () {
+                        return res.json({ message: "Xoá thành công" }).status(200);
+                    })
+                        .catch(function () {
+                        return res.json({ message: "Xóa thất bại" }).status(400);
+                    })];
+            case 1:
+                _a.sent();
+                return [2];
+        }
+    });
+}); };
+exports.deleteCard = deleteCard;
 //# sourceMappingURL=card.controller.js.map

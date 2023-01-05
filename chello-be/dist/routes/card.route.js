@@ -31,5 +31,5 @@ var express_1 = __importDefault(require("express"));
 var router = express_1.default.Router();
 exports.cardRouter = router;
 var cardController = __importStar(require("../controllers/card.controller"));
-router.get("/", cardController.index);
+router.get("/", cardController.getCard);
 //# sourceMappingURL=card.route.js.map

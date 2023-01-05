@@ -14,12 +14,10 @@ externalDocs:
   # description: Find out more about Swagger
   # url: http://swagger.io
 servers:
-  - url: http://localhost:3000
+  - url: http://localhost:3001
   - url: https://chello-be-a5ll.onrender.com
   - url: https://chello-api.onrender.com
 tags:
-  - name: user
-    description: Operations about user
   - name: workspace
     description: Operations about workspace
   - name: card
@@ -28,6 +26,8 @@ tags:
     description: Operations about item
   - name: todoList
     description: Operations about todo list
+  - name: user
+    description: Operations about user
 paths:
   /user:
     post:
@@ -233,7 +233,7 @@ paths:
               schema:
                 type: array
                 $items: "#/components/schemas/Workspace"
-  /workspace/{id}:
+  /workspace/{workspaceId}:
     get:
       tags:
         - workspace
@@ -241,7 +241,7 @@ paths:
       description: ""
       operationId: getWorkspaceById
       parameters:
-        - name: id
+        - name: workspaceId
           in: path
           description: "The ID that needs to be fetched"
           required: true
@@ -268,7 +268,8 @@ paths:
       description: This can only be done by the logged in workspace's admin.
       operationId: updateWorkspace
       parameters:
-        - name: id
+        - name: workspaceId
+          example: tF2aHCPz1NRiKTU89oqy
           in: path
           description: id that need to be updated
           required: true
@@ -296,7 +297,8 @@ paths:
       description: This can only be done by the logged in workspace's admin.
       operationId: patchWorkspace
       parameters:
-        - name: id
+        - name: workspaceId
+          example: tF2aHCPz1NRiKTU89oqy
           in: path
           description: id that need to be updated
           required: true
@@ -326,7 +328,7 @@ paths:
       description: This can only be done by the logged in workspace's admin.
       operationId: deleteWorkspace
       parameters:
-        - name: id
+        - name: workspaceId
           in: path
           description: The id that needs to be deleted
           required: true
@@ -339,13 +341,21 @@ paths:
           description: Invalid id supplied
         "404":
           description: Workspace not found
-  /card:
+  /workspace/{workspaceId}/card:
     post:
       tags:
         - card
       summary: Create card
       description: This can only be done by the logged in admin.
       operationId: createCard
+      parameters:
+        - name: workspaceId
+          example: tF2aHCPz1NRiKTU89oqy
+          in: path
+          description: "The workspace ID that needs to be created"
+          required: true
+          schema:
+            type: string
       requestBody:
         description: Created card object
         content:
@@ -368,13 +378,20 @@ paths:
             application/xml:
               schema:
                 $ref: "#/components/schemas/Card"
-  /cards:
     get:
       tags:
         - card
       summary: Show list of cards
       description: This can only be done by the logged in user.
-      operationId: showListCards
+      operationId: getCard
+      parameters:
+        - name: workspaceId
+          example: tF2aHCPz1NRiKTU89oqy
+          in: path
+          description: "The workspace ID that its cards need to be fetched"
+          required: true
+          schema:
+            type: string
       responses:
         "200":
           description: successful operation
@@ -382,20 +399,28 @@ paths:
             application/json:
               schema:
                 type: array
-                $items: "#/components/schemas/Card"
+                $items: "#/components/schemas/Workspace"
             application/xml:
               schema:
                 type: array
-                $items: "#/components/schemas/Card"
-  /card/{cardId}:
+                $items: "#/components/schemas/Workspace"
+  /workspace/{workspaceId}/card/{cardId}:
     get:
       tags:
         - card
-      summary: Get card and render by card id
+      summary: Get card and render by workspace and card id
       description: ""
       operationId: getCardById
       parameters:
+        - name: workspaceId
+          example: tF2aHCPz1NRiKTU89oqy
+          in: path
+          description: "The workspace ID that its card needs to be fetched"
+          required: true
+          schema:
+            type: string
         - name: cardId
+          example: E8p4qhizMaLiWI9XkXKb
           in: path
           description: "The ID that needs to be fetched"
           required: true
@@ -412,17 +437,25 @@ paths:
               schema:
                 $ref: "#/components/schemas/Card"
         "400":
-          description: Invalid cardId supplied
+          description: Invalid id supplied
         "404":
           description: Card not found
     put:
       tags:
         - card
       summary: Update card
-      description: This can only be done by the logged in workspace's admin.
+      description: This can only be done by the logged in member.
       operationId: updateCard
       parameters:
+        - name: workspaceId
+          example: tF2aHCPz1NRiKTU89oqy
+          in: path
+          description: "The workspace ID that its card needs to be updated"
+          required: true
+          schema:
+            type: string
         - name: cardId
+          example: E8p4qhizMaLiWI9XkXKb
           in: path
           description: id that need to be updated
           required: true
@@ -443,25 +476,70 @@ paths:
       responses:
         default:
           description: successful operation
-  /card/{cardId}/setActived:
-    get:
+    patch:
       tags:
         - card
-      summary: Set active for card
-      description: This can only be done by the logged in workspace's admin.
-      operationId: setActivedCard
+      summary: Patch card with field(s)
+      description: This can only be done by the logged in member.
+      operationId: patchCard
       parameters:
+        - name: workspaceId
+          example: tF2aHCPz1NRiKTU89oqy
+          in: path
+          description: "The workspace ID that its card field(s) needs to be updated"
+          required: true
+          schema:
+            type: string
+        - name: cardId
+          example: E8p4qhizMaLiWI9XkXKb
+          in: path
+          description: card id that need to be updated
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Update card with field(s)
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CardPatch"
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/CardPatch"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/CardPatch"
+      responses:
+        "200":
+          description: Thay đổi thành công
+        "400":
+          description: Thay đổi thất bại
+    delete:
+      tags:
+        - card
+      summary: Delete card
+      description: This can only be done by the logged in workspace's admin.
+      operationId: deleteWorkspace
+      parameters:
+        - name: workspaceId
+          in: path
+          description: "The workspace ID that its card needs to be deleted"
+          required: true
+          schema:
+            type: string
         - name: cardId
           in: path
-          description: id that need to set actived
+          description: The card id that needs to be deleted
           required: true
           schema:
             type: string
       responses:
         "200":
-          description: successful operation
+          description: Deleted successfully
+        "400":
+          description: Invalid id supplied
         "404":
-          description: card id not found
+          description: Workspace not found
   /item:
     post:
       tags:
@@ -723,13 +801,13 @@ components:
         name: user
     Workspace:
       required:
-        - workspaceId
+        # - workspaceId
         - workspaceName
       type: object
       properties:
-        id:
-          type: string
-          example: "ws11"
+        # id:
+        #   type: string
+        #   example: "ws11"
         workspaceName:
           type: string
           example: "Chello Project"
@@ -749,13 +827,13 @@ components:
       xml: workspace
     Card:
       required:
-        - cardId
+        # - cardId
         - cardName
       type: object
       properties:
-        cardId:
-          type: string
-          example: "card10"
+        # cardId:
+        #   type: string
+        #   example: "card10"
         cardName:
           type: string
           example: "Tasks"
@@ -767,13 +845,13 @@ components:
       xml: card
     Item:
       required:
-        - itemId
+        # - itemId
         - itemName
       type: object
       properties:
-        itemId:
-          type: string
-          example: "item4"
+        # itemId:
+        #   type: string
+        #   example: "item4"
         itemName:
           type: string
           example: "ERD design"
@@ -798,13 +876,13 @@ components:
       xml: item
     TodoList:
       required:
-        - todoListId
+        # - todoListId
         - description
       type: object
       properties:
-        todoListId:
-          type: string
-          example: "todo01"
+        # todoListId:
+        #   type: string
+        #   example: "todo01"
         description:
           type: string
           example: "Bước 1 là bay"
@@ -842,6 +920,13 @@ components:
           type: boolean
       xml:
         name: "workspace"
+    CardPatch:
+      type: object
+      properties:
+        isActived:
+          type: boolean
+      xml:
+        name: "card"
   # requestBodies:
   #   Pet:
   #     description: Pet object that needs to be added to the store

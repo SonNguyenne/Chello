@@ -17,7 +17,7 @@ app.use(body_parser_1.default.urlencoded({ extended: true }));
 app.get("/", function (req, res) {
     res.send("Hello");
 });
-app.listen(3000, function () {
-    console.log("Link: http://localhost:".concat(3000));
+app.listen(3001, function () {
+    console.log("Link: http://localhost:".concat(3001));
 });
 //# sourceMappingURL=index.js.map

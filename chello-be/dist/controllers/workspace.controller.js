@@ -98,7 +98,7 @@ var updateWorkspace = function (req, res) { return __awaiter(void 0, void 0, voi
         switch (_a.label) {
             case 0:
                 db = (0, lite_1.getFirestore)();
-                return [4, (0, lite_1.setDoc)((0, lite_1.doc)(db, "workspace", req.params.id), __assign({}, req.body))
+                return [4, (0, lite_1.setDoc)((0, lite_1.doc)(db, "workspace", req.params.workspaceId), __assign({}, req.body))
                         .then(function () {
                         return res.json(lodash_1.default.omit(req.body, "wsId"));
                     })
@@ -118,7 +118,7 @@ var getWorkspaceById = function (req, res) { return __awaiter(void 0, void 0, vo
         switch (_a.label) {
             case 0:
                 db = (0, lite_1.getFirestore)();
-                return [4, (0, lite_1.getDoc)((0, lite_1.doc)((0, lite_1.collection)(db, "workspace"), req.params.id))
+                return [4, (0, lite_1.getDoc)((0, lite_1.doc)((0, lite_1.collection)(db, "workspace"), req.params.workspaceId))
                         .then(function (snap) {
                         return res.json(snap.data()).status(200);
                     })
@@ -138,7 +138,7 @@ var patchWorkspace = function (req, res) { return __awaiter(void 0, void 0, void
         switch (_a.label) {
             case 0:
                 db = (0, lite_1.getFirestore)();
-                return [4, (0, lite_1.updateDoc)((0, lite_1.doc)((0, lite_1.collection)(db, "workspace"), req.params.id), req.body)
+                return [4, (0, lite_1.updateDoc)((0, lite_1.doc)((0, lite_1.collection)(db, "workspace"), req.params.workspaceId), req.body)
                         .then(function () {
                         return res.json({ message: "Thay đổi thành công" }).status(200);
                     })
@@ -158,7 +158,7 @@ var deleteWorkspace = function (req, res) { return __awaiter(void 0, void 0, voi
         switch (_a.label) {
             case 0:
                 db = (0, lite_1.getFirestore)();
-                return [4, (0, lite_1.deleteDoc)((0, lite_1.doc)(db, "workspace", req.params.id))
+                return [4, (0, lite_1.deleteDoc)((0, lite_1.doc)(db, "workspace", req.params.workspaceId))
                         .then(function () {
                         return res.json({ message: "Xoá thành công" }).status(200);
                     })

@@ -11,13 +11,7 @@ import {
   updateDoc,
 } from "firebase/firestore/lite";
 import _ from "lodash";
-interface Workspace {
-  workspaceId?: string;
-  isPublic?: boolean;
-  isFavorite?: boolean;
-  workspaceName?: string;
-  workspaceImage?: string;
-}
+import { WorkspaceInterface } from "../interface";
 
 const createWorkspace = async (req: Request, res: Response) => {
   const db = getFirestore();
@@ -36,7 +30,7 @@ const createWorkspace = async (req: Request, res: Response) => {
   // });
 
   //Add
-  const newWs: Workspace = {
+  const newWs: WorkspaceInterface = {
     isPublic: true,
     isFavorite: false,
     workspaceName: req.body.workspaceName,
@@ -51,7 +45,7 @@ const createWorkspace = async (req: Request, res: Response) => {
 
 const getWorkspace = async (req: Request, res: Response) => {
   const db = getFirestore();
-  let data: Workspace[] = [];
+  let data: WorkspaceInterface[] = [];
   // const wsCol = collection(db, "workspace");
   // const wsSnapshot = await getDocs(wsCol);
   // wsSnapshot.docs.map((doc) => {
@@ -74,7 +68,7 @@ const getWorkspace = async (req: Request, res: Response) => {
 
 const updateWorkspace = async (req: Request, res: Response) => {
   const db = getFirestore();
-  await setDoc(doc(db, "workspace", req.params.id), { ...req.body })
+  await setDoc(doc(db, "workspace", req.params.workspaceId), { ...req.body })
     .then(() => {
       return res.json(_.omit(req.body, "wsId"));
     })
@@ -85,7 +79,7 @@ const updateWorkspace = async (req: Request, res: Response) => {
 
 const getWorkspaceById = async (req: Request, res: Response) => {
   const db = getFirestore();
-  await getDoc(doc(collection(db, "workspace"), req.params.id))
+  await getDoc(doc(collection(db, "workspace"), req.params.workspaceId))
     .then((snap) => {
       return res.json(snap.data()).status(200);
     })
@@ -96,7 +90,10 @@ const getWorkspaceById = async (req: Request, res: Response) => {
 
 const patchWorkspace = async (req: Request, res: Response) => {
   const db = getFirestore();
-  await updateDoc(doc(collection(db, "workspace"), req.params.id), req.body)
+  await updateDoc(
+    doc(collection(db, "workspace"), req.params.workspaceId),
+    req.body
+  )
     .then(() => {
       return res.json({ message: "Thay đổi thành công" }).status(200);
     })
@@ -107,7 +104,7 @@ const patchWorkspace = async (req: Request, res: Response) => {
 
 const deleteWorkspace = async (req: Request, res: Response) => {
   const db = getFirestore();
-  await deleteDoc(doc(db, "workspace", req.params.id))
+  await deleteDoc(doc(db, "workspace", req.params.workspaceId))
     .then(() => {
       return res.json({ message: "Xoá thành công" }).status(200);
     })
