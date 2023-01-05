@@ -26,18 +26,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.workspaceRouter = void 0;
+exports.itemRouter = void 0;
 var express_1 = __importDefault(require("express"));
 var router = express_1.default.Router();
-exports.workspaceRouter = router;
-var workspaceController = __importStar(require("../controllers/workspace.controller"));
-var cardController = __importStar(require("../controllers/card.controller"));
-router.get("/:workspace/cards", cardController.getCards);
-router.post("/:workspace/createCard", cardController.createCard);
-router.patch("/:id", workspaceController.patchWorkspace);
-router.delete("/:id", workspaceController.deleteWorkspace);
-router.put("/:id", workspaceController.updateWorkspace);
-router.post("/", workspaceController.createWorkspace);
-router.get("/:id", workspaceController.getWorkspaceById);
-router.get("/", workspaceController.getWorkspace);
-//# sourceMappingURL=workspace.route.js.map
+exports.itemRouter = router;
+var itemController = __importStar(require("../controllers/item.controller"));
+router.get("/", itemController.getItem);
+//# sourceMappingURL=item.route.js.map

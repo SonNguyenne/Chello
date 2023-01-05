@@ -2,7 +2,7 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import express from "express";
 import { webRoutes } from "./routes/index";
-import {db} from './configs/firebase';
+import { db } from "./configs/firebase";
 // import { initializeApp } from "firebase-admin";
 
 const app = express();

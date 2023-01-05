@@ -4,7 +4,7 @@
   "description": "![alt text](https://i.ibb.co/w69xx7C/ERD-drawio.png)",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon -e ts --exec \"npm run start\"",
+    "dev": "nodemon -e ts,yaml --exec \"npm run start\"",
     "build": "tsc",
     "start": "npm run build && nodemon --inspect ./dist/index.js"
   },

@@ -14,9 +14,9 @@ externalDocs:
   # description: Find out more about Swagger
   # url: http://swagger.io
 servers:
+  - url: http://localhost:3000
   - url: https://chello-be-a5ll.onrender.com
   - url: https://chello-api.onrender.com
-  - url: https://localhost:3000
 tags:
   - name: user
     description: Operations about user
@@ -186,7 +186,7 @@ paths:
           description: Invalid userId supplied
         "404":
           description: User not found
-  /workspace/createWorkspace:
+  /workspace:
     post:
       tags:
         - workspace
@@ -215,7 +215,6 @@ paths:
             application/xml:
               schema:
                 $ref: "#/components/schemas/Workspace"
-  /workspace/getWorkspace:
     get:
       tags:
         - workspace
@@ -234,7 +233,7 @@ paths:
               schema:
                 type: array
                 $items: "#/components/schemas/Workspace"
-  /workspace/{workspaceId}:
+  /workspace/{id}:
     get:
       tags:
         - workspace
@@ -242,7 +241,7 @@ paths:
       description: ""
       operationId: getWorkspaceById
       parameters:
-        - name: workspaceId
+        - name: id
           in: path
           description: "The ID that needs to be fetched"
           required: true
@@ -259,7 +258,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Workspace"
         "400":
-          description: Invalid workspaceId supplied
+          description: Invalid id supplied
         "404":
           description: Workspace not found
     put:
@@ -269,7 +268,7 @@ paths:
       description: This can only be done by the logged in workspace's admin.
       operationId: updateWorkspace
       parameters:
-        - name: workspaceId
+        - name: id
           in: path
           description: id that need to be updated
           required: true
@@ -290,24 +289,56 @@ paths:
       responses:
         default:
           description: successful operation
-    # delete:
-    #   tags:
-    #     - workspace
-    #   summary: Delete workspace
-    #   description: This can only be done by the logged in workspace's admin.
-    #   operationId: deleteWorkspace
-    #   parameters:
-    #     - name: workspaceId
-    #       in: path
-    #       description: The id that needs to be deleted
-    #       required: true
-    #       schema:
-    #         type: string
-    #   responses:
-    #     "400":
-    #       description: Invalid workspaceId supplied
-    #     "404":
-    #       description: Workspace not found
+    patch:
+      tags:
+        - workspace
+      summary: Patch workspace with body (isPublic || isFavorite)
+      description: This can only be done by the logged in workspace's admin.
+      operationId: patchWorkspace
+      parameters:
+        - name: id
+          in: path
+          description: id that need to be updated
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Patch workspace with isPublic or isFavorite
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WorkspacePatch"
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/WorkspacePatch"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/WorkspacePatch"
+      responses:
+        "200":
+          description: Thay đổi thành công
+        "400":
+          description: Thay đổi thất bại
+    delete:
+      tags:
+        - workspace
+      summary: Delete workspace
+      description: This can only be done by the logged in workspace's admin.
+      operationId: deleteWorkspace
+      parameters:
+        - name: id
+          in: path
+          description: The id that needs to be deleted
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Deleted successfully
+        "400":
+          description: Invalid id supplied
+        "404":
+          description: Workspace not found
   /card:
     post:
       tags:
@@ -694,11 +725,9 @@ components:
       required:
         - workspaceId
         - workspaceName
-        - isPublic
-        - isFavorite
       type: object
       properties:
-        workspaceId:
+        id:
           type: string
           example: "ws11"
         workspaceName:
@@ -708,6 +737,9 @@ components:
           type: boolean
         isFavorite:
           type: boolean
+        workspaceImage:
+          type: string
+          example: "https://digitalsynopsis.com/wp-content/uploads/2017/07/beautiful-color-ui-gradients-backgrounds-relay.png"
         member:
           type: array
           $items: "#/components/schemas/User"
@@ -801,6 +833,15 @@ components:
           type: string
       xml:
         name: "##default"
+    WorkspacePatch:
+      type: object
+      properties:
+        isPublic:
+          type: boolean
+        isFavorite:
+          type: boolean
+      xml:
+        name: "workspace"
   # requestBodies:
   #   Pet:
   #     description: Pet object that needs to be added to the store
