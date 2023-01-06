@@ -636,6 +636,7 @@ header.light * {
 .dashboard-container .content .content-body .content-body-star-icon:hover {
   transform: scale(1.2);
 }
+.dashboard-container .content .content-body .content-body-lock-icon,
 .dashboard-container .content .content-body .content-body-unstar-icon {
   position: absolute;
   bottom: 10px;
@@ -652,6 +653,9 @@ header.light * {
   .content-body-unstar-icon:hover:after {
   content: none;
   content: "\2605";
+}
+.dashboard-container .content .content-body .content-body-lock-icon:hover {
+  transform: scale(1.2);
 }
 .dashboard-container .slide-menu .btn-open-slide-menu {
   display: none;

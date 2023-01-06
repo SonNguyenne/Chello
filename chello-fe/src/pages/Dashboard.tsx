@@ -1,31 +1,33 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   FaChevronRight,
   FaHome,
-  FaInfoCircle,
   FaLayerGroup,
   FaPlus,
-  FaRegClock,
-  FaRegStar,
   FaTable,
   FaTimes,
 } from "react-icons/fa";
-import { createWorkspace, fetchWorkspace } from "../apis/workspace.api";
+import {
+  createWorkspace,
+  fetchWorkspace,
+  patchWorkspace,
+} from "../apis/workspace.api";
+import ContentDashboard from "../components/ContentDashboard";
 import InputAdd from "../components/InputAdd";
 import SlideMenu from "../components/SlideMenu";
-import { WorkspaceInterface } from "../types";
+import { handleSubmitIsPublic } from "../utils/PatchWorkspace";
 
 const Dashboard = () => {
-  // const [refresh, setRefresh] = useState(false);
+  const [refresh, setRefresh] = useState(false);
   const [showSlideMenu, setShowSlideMenu] = useState(true);
   const [showWorkspaceInfo, setShowWorkspaceInfo] = useState("");
   const [workspace, setWorkspace] = useState([]);
   const [showAddWorkspace, setShowAddWorkspace] = useState(false);
   const [newWorkspaceName, setNewWorkspaceName] = useState("");
 
-  // const onRefresh = () => {
-  //   setRefresh(!refresh);
-  // };
+  const onRefresh = () => {
+    setRefresh(!refresh);
+  };
 
   const handleMenuLeftClick = (workspaceId: string | undefined) => {
     if (workspaceId === undefined || workspaceId === showWorkspaceInfo) {
@@ -33,6 +35,7 @@ const Dashboard = () => {
     } else setShowWorkspaceInfo(workspaceId);
   };
 
+  // Create workspace function + modal
   const handleShowWorkspaceAdd = () => {
     setShowAddWorkspace(!showAddWorkspace);
   };
@@ -54,17 +57,38 @@ const Dashboard = () => {
     await createWorkspace({ workspaceName: newWorkspaceName });
     fetchData();
     setShowAddWorkspace(!showAddWorkspace);
+    onRefresh();
+  };
+
+  // Handle isPublic: private / public
+  const handleClickSubmitIsPublic = async (
+    workspaceId?: string,
+    isPublic?: boolean
+  ) => {
+    await handleSubmitIsPublic(workspaceId, isPublic);
+    fetchData();
+    onRefresh();
+  };
+
+  // Handle isFavorite
+  const handleClickSubmitIsFavorite = async (
+    workspaceId?: string,
+    isFavorite?: boolean
+  ) => {
+    // setDataUpdate({ isFavorite: !isFavorite });
+    await patchWorkspace({ isFavorite: !isFavorite }, workspaceId);
+    fetchData();
+    onRefresh();
   };
 
   const fetchData = async () => {
     const res = await fetchWorkspace();
     setWorkspace(res.data);
-    // onRefresh()
   };
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [refresh]);
 
   return (
     <div className="dashboard-container">
@@ -132,6 +156,10 @@ const Dashboard = () => {
                 showById={showWorkspaceInfo}
                 isPublic={true}
                 handleClick={handleMenuLeftClick}
+                onRefresh={onRefresh}
+                fetchData={fetchData}
+                handleClickSubmitIsPublic={handleClickSubmitIsPublic}
+                handleClickSubmitIsFavorite={handleClickSubmitIsFavorite}
               />
             </div>
           </li>
@@ -146,99 +174,40 @@ const Dashboard = () => {
                 showById={showWorkspaceInfo}
                 isPublic={false}
                 handleClick={handleMenuLeftClick}
+                onRefresh={onRefresh}
+                fetchData={fetchData}
+                handleClickSubmitIsPublic={handleClickSubmitIsPublic}
+                handleClickSubmitIsFavorite={handleClickSubmitIsFavorite}
               />
             </div>
           </li>
         </ul>
       </div>
       <div className="content">
-        <section>
-          <div className="content-title">
-            <FaRegStar />
-            <h3>Các bảng ưa thích</h3>
-          </div>
-          <div className="content-body">
-            {workspace?.map((ws: WorkspaceInterface) => (
-              <Fragment key={ws.workspaceId}>
-                {ws.isFavorite && (
-                  <div key={ws.workspaceId}>
-                    <img src={ws.workspaceImage} alt="" />
-                    <span className="content-body-star-name">
-                      {ws.workspaceName}
-                    </span>
-                    <span
-                      className="content-body-star-icon"
-                      onClick={() => alert("Đã hủy")}
-                      title="Nhấn để xóa khỏi danh sách ưa thích"
-                    ></span>
-                  </div>
-                )}
-              </Fragment>
-            ))}
-          </div>
-        </section>
-        <section>
-          <div className="content-title">
-            <FaRegClock />
-            <h3>Đã xem gần đây</h3>
-          </div>
-          <div className="content-body">
-            {workspace?.map((ws: WorkspaceInterface) => (
-              <div key={ws.workspaceId}>
-                <img src={ws.workspaceImage} alt="" />
-                <span className="content-body-star-name">
-                  {ws.workspaceName}
-                </span>
-                <span
-                  className="content-body-unstar-icon"
-                  onClick={() => alert("Đã hủy")}
-                  title="Nhấn để thêm vào danh sách ưa thích"
-                ></span>
-              </div>
-            ))}
-          </div>
-        </section>
-        <section>
-          <span className="content-title">
-            <FaInfoCircle />
-            <h3>CÁC KHÔNG GIAN LÀM VIỆC KHÁCH</h3>
-          </span>
-          <div className="content-body">
-            {workspace?.map((ws: WorkspaceInterface) => (
-              <div key={ws.workspaceId}>
-                <img src={ws.workspaceImage} alt="" />
-                <span className="content-body-star-name">
-                  {ws.workspaceName}
-                </span>
-                <span
-                  className="content-body-unstar-icon"
-                  onClick={() => alert("Đã hủy")}
-                  title="Nhấn để thêm vào danh sách ưa thích"
-                ></span>
-              </div>
-            ))}
-          </div>
-        </section>
-        <section>
-          <span className="content-title">
-            <h3>CÁC KHÔNG GIAN LÀM VIỆC CỦA BẠN</h3>
-          </span>
-          <div className="content-body">
-            {workspace?.map((ws: WorkspaceInterface) => (
-              <div key={ws.workspaceId}>
-                <img src={ws.workspaceImage} alt="" />
-                <span className="content-body-star-name">
-                  {ws.workspaceName}
-                </span>
-                <span
-                  className="content-body-unstar-icon"
-                  onClick={() => alert("Đã hủy")}
-                  title="Nhấn để thêm vào danh sách ưa thích"
-                ></span>
-              </div>
-            ))}
-          </div>
-        </section>
+        <ContentDashboard
+          data={workspace}
+          filter={"favorited"}
+          isFavorite={true}
+          handleSubmit={handleClickSubmitIsFavorite}
+        />
+        <ContentDashboard
+          data={workspace}
+          filter={"another"}
+          isFavorite={false}
+          handleSubmit={handleClickSubmitIsFavorite}
+        />
+        <ContentDashboard
+          data={workspace}
+          filter={"mine"}
+          isFavorite={false}
+          handleSubmit={handleClickSubmitIsFavorite}
+        />
+        <ContentDashboard
+          data={workspace}
+          filter={"private"}
+          isFavorite={false}
+          handleSubmit={handleClickSubmitIsPublic}
+        />
       </div>
     </div>
   );

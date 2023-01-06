@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   FaArchive,
   FaChevronDown,
@@ -13,12 +13,7 @@ import {
 import { Link } from "react-router-dom";
 // import ReactCSSTransitionGroup from "react-transition-group";
 
-import {
-  deleteWorkspace,
-  fetchWorkspace,
-  patchWorkspace,
-  putWorkspace,
-} from "../apis/workspace.api";
+import { deleteWorkspace, putWorkspace } from "../apis/workspace.api";
 import { WorkspaceInterface } from "../types";
 import Modal from "./Modal";
 
@@ -27,11 +22,29 @@ type SlideMenuType = {
   showById: string;
   isPublic: boolean;
   handleClick: (id: string | undefined) => void;
+  onRefresh: () => void;
+  fetchData: () => void;
+  handleClickSubmitIsPublic: (
+    workspaceId: string | undefined,
+    isPublic: boolean | undefined
+  ) => void;
+  handleClickSubmitIsFavorite: (
+    workspaceId: string | undefined,
+    isPublic: boolean | undefined
+  ) => void;
 };
 
 const SlideMenu = (props: SlideMenuType) => {
-  const { showById, data, handleClick, isPublic } = props;
-  const [workspace, setWorkspace] = useState(data);
+  const {
+    showById,
+    data,
+    handleClick,
+    isPublic,
+    onRefresh,
+    fetchData,
+    handleClickSubmitIsPublic,
+    handleClickSubmitIsFavorite,
+  } = props;
   const [dataUpdate, setDataUpdate] = useState<WorkspaceInterface>({});
   const [dataDelete, setDataDelete] = useState("");
   const [toggleUpdateModal, setToggleUpdateModal] = useState(false);
@@ -91,33 +104,24 @@ const SlideMenu = (props: SlideMenuType) => {
   };
 
   // Handle isPublic: private / public
-  const handleSubmitIsPublic = async (
+  const handleClickPublicWorkspace = async (
     workspaceId?: string,
     isPublic?: boolean
   ) => {
-    setDataUpdate({ isPublic: isPublic === true ? false : true });
-    await patchWorkspace(dataUpdate, workspaceId);
+    await handleClickSubmitIsPublic(workspaceId, isPublic);
     fetchData();
+    onRefresh();
   };
 
   // Handle isFavorite
-  const handleSubmitIsFavorite = async (
+  const handleClickFavoriteWorkspace = async (
     workspaceId?: string,
     isFavorite?: boolean
   ) => {
-    setDataUpdate({ isFavorite: isFavorite === true ? false : true });
-    await patchWorkspace(dataUpdate, workspaceId);
+    await handleClickSubmitIsFavorite(workspaceId, isFavorite);
     fetchData();
+    onRefresh();
   };
-
-  // Fetch data
-  const fetchData = async () => {
-    const res = await fetchWorkspace();
-    setWorkspace(res.data);
-  };
-  useEffect(() => {
-    fetchData();
-  }, []);
 
   return (
     <div className="slide-menu-workspace-list">
@@ -241,7 +245,10 @@ const SlideMenu = (props: SlideMenuType) => {
                       </Link>
                       <li
                         onClick={(e) =>
-                          handleSubmitIsFavorite(ws.workspaceId, ws.isFavorite)
+                          handleClickFavoriteWorkspace(
+                            ws.workspaceId,
+                            ws.isFavorite
+                          )
                         }
                       >
                         <div className="workspace-dropdown-items">
@@ -279,7 +286,10 @@ const SlideMenu = (props: SlideMenuType) => {
                       </li>
                       <li
                         onClick={(e) =>
-                          handleSubmitIsPublic(ws.workspaceId, ws.isPublic)
+                          handleClickPublicWorkspace(
+                            ws.workspaceId,
+                            ws.isPublic
+                          )
                         }
                       >
                         <div className="workspace-dropdown-items">
