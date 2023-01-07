@@ -228,7 +228,7 @@ const SlideMenu = (props: SlideMenuType) => {
                 {ws.workspaceId === showById && (
                   <div className="workspace-dropdown">
                     <ul>
-                      <Link to="/workspace">
+                      <Link to={`/workspace/${ws.workspaceId}`}>
                         <li>
                           <div className="workspace-dropdown-items">
                             <div>

@@ -14,10 +14,12 @@ import { Link, Outlet } from "react-router-dom";
 import { createWorkspace, fetchWorkspace } from "../apis/workspace.api";
 import "../App.css";
 import { WorkspaceInterface } from "../types";
+import Loading from "./Loading";
 import Modal from "./Modal";
 
 const Header = () => {
   const [theme, setTheme] = useState("default");
+  const [loading, setLoading] = useState(false);
   const [toggleNav, setToggleNav] = useState(true);
   const [workspace, setWorkspace] = useState([]);
   const [toggleModal, setToggleModal] = useState(false);
@@ -51,7 +53,9 @@ const Header = () => {
   };
 
   const fetchData = async () => {
+    setLoading(true);
     const res = await fetchWorkspace();
+    setLoading(false);
     setWorkspace(res.data);
   };
   useEffect(() => {
@@ -65,6 +69,7 @@ const Header = () => {
   return (
     <>
       <header className={theme}>
+        {loading && <Loading />}
         {toggleModal && (
           <Modal
             name={modalName}
@@ -86,7 +91,7 @@ const Header = () => {
           {/* Left */}
           <div className="navbar-left">
             <Link to="/">
-              <img src="./logo.png" alt="logo" className="logo-icon" />
+              <img src="../logo.png" alt="logo" className="logo-icon" />
               <span>Chello</span>
             </Link>
             <div className="navbar-responsive">

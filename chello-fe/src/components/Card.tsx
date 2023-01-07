@@ -41,6 +41,10 @@ const Card = (props: any) => {
     }
   };
 
+  const handleEditCardName = (e: any) => {
+    console.log(e.target);
+  };
+
   return (
     <div className="card">
       <div
@@ -48,7 +52,7 @@ const Card = (props: any) => {
         style={{ backgroundColor: props.isUsingPlaceholder ? "#dae8fc" : "" }}
       >
         <div className="card-header">
-          <span>{card.cardName}</span>
+          <span onClick={handleEditCardName}>{card.cardName}</span>
           <span>
             <FaEllipsisH />
           </span>

@@ -56,3 +56,12 @@ export const patchWorkspace = async (
   );
   return res;
 };
+
+export const getWorkspaceById = async (workspaceId: string | undefined) => {
+  const res = await axios.get(`${apiUrl}/workspace/${workspaceId}`, {
+    headers: {
+      contentType: "application/json",
+    },
+  });
+  return res;
+};

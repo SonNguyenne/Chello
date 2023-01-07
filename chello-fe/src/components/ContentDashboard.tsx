@@ -6,6 +6,7 @@ import {
   FaLock,
   FaUnlock,
 } from "react-icons/fa";
+import { Link } from "react-router-dom";
 import { WorkspaceInterface } from "../types";
 
 interface Props {
@@ -64,10 +65,12 @@ const ContentDashboard = (props: Props) => {
           favoritedData.map((ws: WorkspaceInterface) => (
             <Fragment key={ws.workspaceId}>
               <div key={ws.workspaceId}>
-                <img src={ws.workspaceImage} alt="" />
-                <span className="content-body-star-name">
-                  {ws.workspaceName}
-                </span>
+                <Link to={`/workspace/${ws.workspaceId}`}>
+                  <img src={ws.workspaceImage} alt="" />
+                  <span className="content-body-star-name">
+                    {ws.workspaceName}
+                  </span>
+                </Link>
                 <span
                   className={
                     ws.isFavorite
@@ -86,10 +89,12 @@ const ContentDashboard = (props: Props) => {
           mineData.map((ws: WorkspaceInterface) => (
             <Fragment key={ws.workspaceId}>
               <div key={ws.workspaceId}>
-                <img src={ws.workspaceImage} alt="" />
-                <span className="content-body-star-name">
-                  {ws.workspaceName}
-                </span>
+                <Link to={`/workspace/${ws.workspaceId}`}>
+                  <img src={ws.workspaceImage} alt="" />
+                  <span className="content-body-star-name">
+                    {ws.workspaceName}
+                  </span>
+                </Link>
                 <span
                   className={
                     ws.isFavorite
@@ -108,10 +113,12 @@ const ContentDashboard = (props: Props) => {
           data.map((ws: WorkspaceInterface) => (
             <Fragment key={ws.workspaceId}>
               <div key={ws.workspaceId}>
-                <img src={ws.workspaceImage} alt="" />
-                <span className="content-body-star-name">
-                  {ws.workspaceName}
-                </span>
+                <Link to={`/workspace/${ws.workspaceId}`}>
+                  <img src={ws.workspaceImage} alt="" />
+                  <span className="content-body-star-name">
+                    {ws.workspaceName}
+                  </span>
+                </Link>
                 <span
                   className={
                     ws.isFavorite
@@ -130,10 +137,12 @@ const ContentDashboard = (props: Props) => {
           privateData.map((ws: WorkspaceInterface) => (
             <Fragment key={ws.workspaceId}>
               <div key={ws.workspaceId}>
-                <img src={ws.workspaceImage} alt="" />
-                <span className="content-body-star-name">
-                  {ws.workspaceName}
-                </span>
+                <Link to={`/workspace/${ws.workspaceId}`}>
+                  <img src={ws.workspaceImage} alt="" />
+                  <span className="content-body-star-name">
+                    {ws.workspaceName}
+                  </span>
+                </Link>
                 <span
                   className="content-body-lock-icon"
                   onClick={(e) => handleClickStar(ws.workspaceId, ws.isPublic)}

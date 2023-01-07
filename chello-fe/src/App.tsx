@@ -14,7 +14,7 @@ function App() {
         <Route index element={<Dashboard />} />
         <Route path="/login" element={<Login />} />
         <Route path="/profile" element={<Profile />} />
-        <Route path="/workspace" element={<Workspace />} />
+        <Route path="/workspace/:workspaceId" element={<Workspace />} />
       </Route>
     </Routes>
   );
