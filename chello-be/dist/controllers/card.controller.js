@@ -46,6 +46,15 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.patchCard = exports.getCardById = exports.deleteCard = exports.updateCard = exports.getCard = exports.createCard = void 0;
 var lite_1 = require("firebase/firestore/lite");
@@ -60,12 +69,12 @@ var getCard = function (req, res) { return __awaiter(void 0, void 0, void 0, fun
                 dataCard = [];
                 return [4, (0, lite_1.getDocs)((0, lite_1.collection)(db, "workspace", workspaceId, "card")).then(function (snap) {
                         snap.docs.map(function (doc) {
-                            dataCard.push(__assign({}, doc.data()));
+                            dataCard.push(__assign({ cardId: doc.id }, doc.data()));
                         });
                     })];
             case 1:
                 _a.sent();
-                return [2, res.json({ cards: dataCard })];
+                return [2, res.json(__spreadArray([], dataCard, true))];
         }
     });
 }); };

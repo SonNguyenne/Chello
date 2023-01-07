@@ -22,12 +22,12 @@ const getCard = async (req: Request<ReqParams, {}, {}, {}>, res: Response) => {
   await getDocs(collection(db, "workspace", workspaceId, "card")).then(
     (snap) => {
       snap.docs.map((doc) => {
-        dataCard.push({ ...doc.data() });
+        dataCard.push({ cardId: doc.id, ...doc.data() });
       });
     }
   );
 
-  return res.json({ cards: dataCard });
+  return res.json([...dataCard]);
 };
 
 const createCard = async (
