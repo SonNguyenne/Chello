@@ -14,11 +14,13 @@ import {
 } from "../apis/workspace.api";
 import ContentDashboard from "../components/ContentDashboard";
 import InputAdd from "../components/InputAdd";
+import Loading from "../components/Loading";
 import SlideMenu from "../components/SlideMenu";
 import { handleSubmitIsPublic } from "../utils/PatchWorkspace";
 
 const Dashboard = () => {
   const [refresh, setRefresh] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [showSlideMenu, setShowSlideMenu] = useState(true);
   const [showWorkspaceInfo, setShowWorkspaceInfo] = useState("");
   const [workspace, setWorkspace] = useState([]);
@@ -82,8 +84,10 @@ const Dashboard = () => {
   };
 
   const fetchData = async () => {
+    setLoading(true);
     const res = await fetchWorkspace();
     setWorkspace(res.data);
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -92,6 +96,7 @@ const Dashboard = () => {
 
   return (
     <div className="dashboard-container">
+      {loading && <Loading />}
       <div
         className="slide-menu"
         style={{ width: showSlideMenu ? "300px" : "0" }}
