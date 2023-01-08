@@ -328,6 +328,7 @@ const Workspace = () => {
   useEffect(() => {
     fetchWorkspace();
     fetchCardFromWorkspace();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -432,6 +433,7 @@ const Workspace = () => {
                         setCard={setWorkspace}
                         placeholder={provided.placeholder}
                         isUsingPlaceholder={snapshot.isUsingPlaceholder}
+                        fetchCardFromWorkspace={fetchCardFromWorkspace}
                       />
                     </div>
                   );

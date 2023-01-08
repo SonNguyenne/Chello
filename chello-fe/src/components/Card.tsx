@@ -1,13 +1,28 @@
 import React, { useState } from "react";
 import { Draggable } from "react-beautiful-dnd";
-import { FaEllipsisH, FaPlus } from "react-icons/fa";
+import { FaPlus, FaTrashAlt } from "react-icons/fa";
+import { useParams } from "react-router-dom";
+import { deleteCard } from "../apis/card.api";
 import InputAdd from "./InputAdd";
 import Item from "./Item";
+import Modal from "./Modal";
 
 const Card = (props: any) => {
+  let { workspaceId } = useParams();
   const [card, setCard] = useState(props.data);
   const [showItemAdd, setShowItemAdd] = useState(false);
   const [newItemName, setNewItemName] = useState("");
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const fetchCardFromWorkspace = props.fetchCardFromWorkspace;
+
+  const handleToggleDeleteModal = () => {
+    setShowDeleteModal(!showDeleteModal);
+  };
+  const handleSubmitDeleteCard = async (cardId: string | undefined) => {
+    await deleteCard(workspaceId, cardId);
+    fetchCardFromWorkspace();
+    setShowDeleteModal(!showDeleteModal);
+  };
 
   const handleShowAddItem = () => {
     setShowItemAdd(!showItemAdd);
@@ -53,9 +68,23 @@ const Card = (props: any) => {
       >
         <div className="card-header">
           <span onClick={handleEditCardName}>{card.cardName}</span>
-          <span>
-            <FaEllipsisH />
+          <span onClick={handleToggleDeleteModal}>
+            <FaTrashAlt />
           </span>
+          {showDeleteModal && (
+            <Modal
+              type="delete"
+              handleToggleModal={handleToggleDeleteModal}
+              handleSubmit={(e) => handleSubmitDeleteCard(card.cardId)}
+              name={card.cardName}
+            >
+              <div className="modal-body">
+                <label className="modal-title">
+                  Bạn có chắc chắn là muốn xóa thẻ này?
+                </label>
+              </div>
+            </Modal>
+          )}
         </div>
         <div className="card-body">
           {card.items &&

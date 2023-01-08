@@ -27,14 +27,20 @@ export const createCard = async (
   return res;
 };
 
-// export const deleteWorkspace = async (cardId: string | undefined) => {
-//   const res = await axios.delete(`${apiUrl}/card/${cardId}`, {
-//     headers: {
-//       contentType: "application/json",
-//     },
-//   });
-//   return res;
-// };
+export const deleteCard = async (
+  workspaceId: string | undefined,
+  cardId: string | undefined
+) => {
+  const res = await axios.delete(
+    `${apiUrl}/workspace/${workspaceId}/card/${cardId}`,
+    {
+      headers: {
+        contentType: "application/json",
+      },
+    }
+  );
+  return res;
+};
 
 // export const putWorkspace = async (
 //   card: CardInterface,

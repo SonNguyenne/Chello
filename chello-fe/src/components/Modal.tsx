@@ -6,7 +6,7 @@ type ModalInterface = {
   children: React.ReactNode[] | React.ReactNode;
   type: "create" | "update" | "delete";
   handleToggleModal: () => void;
-  handleSubmit?: () => void;
+  handleSubmit?: (id?: string | any) => void;
 };
 
 const Modal: FC<ModalInterface> = (props: ModalInterface) => {
