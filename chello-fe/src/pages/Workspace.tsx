@@ -321,7 +321,8 @@ const Workspace = () => {
   const fetchCardFromWorkspace = async () => {
     setLoading(true);
     const res = await fetchCard(workspaceId);
-    setCards(res.data);
+    const dataSort = res.data.sort((a: any, b: any) => a.index - b.index);
+    setCards(dataSort);
     setLoading(false);
   };
 

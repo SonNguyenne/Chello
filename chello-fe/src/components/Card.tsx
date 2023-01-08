@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Draggable } from "react-beautiful-dnd";
 import { FaPlus, FaTrashAlt } from "react-icons/fa";
 import { useParams } from "react-router-dom";
@@ -65,8 +65,12 @@ const Card = (props: any) => {
     setNewCardName(e.target.value);
   };
   const submitEditCardName = async (cardId: string | undefined) => {
-    await patchCard(workspaceId, cardId, { cardName: newCardName });
-    fetchCardFromWorkspace();
+    if (newCardName === "") {
+      return alert("Please enter card name");
+    } else if (card.cardName !== newCardName) {
+      await patchCard(workspaceId, cardId, { cardName: newCardName });
+      fetchCardFromWorkspace();
+    }
     handleToggleShowEditCardName();
   };
 
@@ -79,8 +83,6 @@ const Card = (props: any) => {
       handleToggleShowEditCardName();
     }
   };
-
-  useEffect(() => {}, []);
 
   return (
     <div className="card">
