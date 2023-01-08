@@ -80,19 +80,29 @@ var getCard = function (req, res) { return __awaiter(void 0, void 0, void 0, fun
 }); };
 exports.getCard = getCard;
 var createCard = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var db, params, workspaceId, newCard;
+    var db, params, workspaceId, dataCard, newCard;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 db = (0, lite_1.getFirestore)();
                 params = req.params;
                 workspaceId = params.workspaceId;
+                dataCard = [];
+                return [4, (0, lite_1.getDocs)((0, lite_1.collection)(db, "workspace", workspaceId, "card")).then(function (snap) {
+                        snap.docs.map(function (doc) {
+                            dataCard.push(__assign({ cardId: doc.id }, doc.data()));
+                        });
+                    })];
+            case 1:
+                _a.sent();
+                console.log(dataCard);
                 newCard = {
                     cardName: req.body.cardName,
                     isActived: true,
+                    index: dataCard.length + 1
                 };
                 return [4, (0, lite_1.addDoc)((0, lite_1.collection)(db, "workspace", workspaceId, "card"), newCard)];
-            case 1:
+            case 2:
                 _a.sent();
                 return [2, res.json(newCard).status(200)];
         }

@@ -32,6 +32,7 @@ var router = express_1.default.Router();
 exports.workspaceRouter = router;
 var workspaceController = __importStar(require("../controllers/workspace.controller"));
 var cardController = __importStar(require("../controllers/card.controller"));
+var itemController = __importStar(require("../controllers/item.controller"));
 router.get("/", workspaceController.getWorkspace);
 router.post("/", workspaceController.createWorkspace);
 router.put("/:workspaceId", workspaceController.updateWorkspace);
@@ -44,4 +45,10 @@ router.put("/:workspaceId/card/:cardId", cardController.updateCard);
 router.patch("/:workspaceId/card/:cardId", cardController.patchCard);
 router.delete("/:workspaceId/card/:cardId", cardController.deleteCard);
 router.get("/:workspaceId/card/:cardId", cardController.getCardById);
+router.get("/:workspaceId/card/:cardId/item", itemController.getItem);
+router.post("/:workspaceId/card/:cardId/item", itemController.createItem);
+router.put("/:workspaceId/card/:cardId/item/:itemId", itemController.updateItem);
+router.get("/:workspaceId/card/:cardId/item/:itemId", itemController.getItemById);
+router.patch("/:workspaceId/card/:cardId/item/:itemId", itemController.patchItem);
+router.delete("/:workspaceId/card/:cardId/item/:itemId", itemController.deleteItem);
 //# sourceMappingURL=workspace.route.js.map

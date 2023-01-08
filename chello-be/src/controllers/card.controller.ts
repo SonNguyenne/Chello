@@ -38,10 +38,21 @@ const createCard = async (
   const { params } = req;
   const workspaceId = params.workspaceId;
 
+  let dataCard: CardInterface[] = [];
+  await getDocs(collection(db, "workspace", workspaceId, "card")).then(
+      (snap) => {
+          snap.docs.map((doc) => {
+              dataCard.push({ cardId: doc.id, ...doc.data() });
+            });
+        }
+        );
+    console.log(dataCard);
+
   const newCard: CardInterface = {
     cardName: req.body.cardName,
     isActived: true,
-  };
+    index: dataCard.length + 1
+  }; 
 
   await addDoc(collection(db, "workspace", workspaceId, "card"), newCard);
   return res.json(newCard).status(200);

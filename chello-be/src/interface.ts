@@ -10,6 +10,7 @@ export interface CardInterface {
   cardId?: string;
   cardName?: string;
   isActived?: boolean;
+  index?: number;
 }
 
 export interface ReqParams {

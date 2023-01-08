@@ -1,4 +1,15 @@
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -35,27 +46,157 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.getItem = void 0;
-var app_1 = require("firebase/app");
-var lite_1 = require("firebase/firestore/lite");
-var firebaseConfig = {
-    apiKey: "AIzaSyB63Q5bZ1eTCD2Lu9QTuL8Wd9Z58awOkXA",
-    authDomain: "chello-data.firebaseapp.com",
-    projectId: "chello-data",
-    storageBucket: "chello-data.appspot.com",
-    messagingSenderId: "987726040037",
-    appId: "1:987726040037:web:b417faef2db4c6350ebd0c",
+var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
 };
-var app = (0, app_1.initializeApp)(firebaseConfig);
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.patchItem = exports.getItemById = exports.deleteItem = exports.updateItem = exports.getItem = exports.createItem = void 0;
+var lite_1 = require("firebase/firestore/lite");
 var getItem = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var db, docRef;
+    var db, params, workspaceId, cardId, dataItem;
     return __generator(this, function (_a) {
-        db = (0, lite_1.getFirestore)(app);
-        docRef = (0, lite_1.collection)(db, "workspace");
-        console.log(docRef.id);
-        return [2, res.json("get")];
+        switch (_a.label) {
+            case 0:
+                db = (0, lite_1.getFirestore)();
+                params = req.params;
+                workspaceId = params.workspaceId;
+                cardId = params.cardId;
+                dataItem = [];
+                return [4, (0, lite_1.getDocs)((0, lite_1.collection)(db, "workspace", workspaceId, "card", cardId, 'item')).then(function (snap) {
+                        snap.docs.map(function (doc) {
+                            dataItem.push(__assign({ itemId: doc.id }, doc.data()));
+                        });
+                    })];
+            case 1:
+                _a.sent();
+                return [2, res.json(__spreadArray([], dataItem, true))];
+        }
     });
 }); };
 exports.getItem = getItem;
+var createItem = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var db, params, workspaceId, cardId, newItem;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                db = (0, lite_1.getFirestore)();
+                params = req.params;
+                workspaceId = params.workspaceId;
+                cardId = params.cardId;
+                newItem = {
+                    itemName: req.body.itemName,
+                    description: req.body.description,
+                    deadline: req.body.deadline,
+                    background: req.body.background,
+                };
+                return [4, (0, lite_1.addDoc)((0, lite_1.collection)(db, "workspace", workspaceId, "card", cardId, 'item'), newItem)];
+            case 1:
+                _a.sent();
+                return [2, res.json(newItem).status(200)];
+        }
+    });
+}); };
+exports.createItem = createItem;
+var updateItem = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var db, params, workspaceId, cardId, itemId;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                db = (0, lite_1.getFirestore)();
+                params = req.params;
+                workspaceId = params.workspaceId;
+                cardId = params.cardId;
+                itemId = params.itemId;
+                return [4, (0, lite_1.setDoc)((0, lite_1.doc)(db, "workspace", workspaceId, "card", cardId, 'item', itemId), __assign({}, req.body))
+                        .then(function () {
+                        return res.json(req.body);
+                    })
+                        .catch(function () {
+                        return res.json({ message: "Cập nhật thất bại" });
+                    })];
+            case 1:
+                _a.sent();
+                return [2];
+        }
+    });
+}); };
+exports.updateItem = updateItem;
+var getItemById = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var db, params, workspaceId, cardId, itemId;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                db = (0, lite_1.getFirestore)();
+                params = req.params;
+                workspaceId = params.workspaceId;
+                cardId = params.cardId;
+                itemId = params.itemId;
+                return [4, (0, lite_1.getDoc)((0, lite_1.doc)((0, lite_1.collection)(db, "workspace", workspaceId, "card", cardId, 'item'), itemId))
+                        .then(function (snap) {
+                        return res.json(snap.data()).status(200);
+                    })
+                        .catch(function (err) {
+                        return res.json(err.status);
+                    })];
+            case 1:
+                _a.sent();
+                return [2];
+        }
+    });
+}); };
+exports.getItemById = getItemById;
+var patchItem = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var db, params, workspaceId, cardId, itemId;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                db = (0, lite_1.getFirestore)();
+                params = req.params;
+                workspaceId = params.workspaceId;
+                cardId = params.cardId;
+                itemId = params.itemId;
+                return [4, (0, lite_1.updateDoc)((0, lite_1.doc)((0, lite_1.collection)(db, "workspace", workspaceId, "card", cardId, 'item'), itemId), req.body)
+                        .then(function () {
+                        return res.json({ message: "Thay đổi thành công" }).status(200);
+                    })
+                        .catch(function () {
+                        return res.json({ message: "Thay đổi thất bại" }).status(400);
+                    })];
+            case 1:
+                _a.sent();
+                return [2];
+        }
+    });
+}); };
+exports.patchItem = patchItem;
+var deleteItem = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var db, params, workspaceId, cardId, itemId;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                db = (0, lite_1.getFirestore)();
+                params = req.params;
+                workspaceId = params.workspaceId;
+                cardId = params.cardId;
+                itemId = params.itemId;
+                return [4, (0, lite_1.deleteDoc)((0, lite_1.doc)(db, "workspace", workspaceId, "card", cardId, 'item', itemId))
+                        .then(function () {
+                        return res.json({ message: "Xoá thành công" }).status(200);
+                    })
+                        .catch(function () {
+                        return res.json({ message: "Xóa thất bại" }).status(400);
+                    })];
+            case 1:
+                _a.sent();
+                return [2];
+        }
+    });
+}); };
+exports.deleteItem = deleteItem;
 //# sourceMappingURL=item.controller.js.map

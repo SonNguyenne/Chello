@@ -540,13 +540,28 @@ paths:
           description: Invalid id supplied
         "404":
           description: Workspace not found
-  /item:
+  /workspace/{workspaceId}/card/{cardId}/item:
     post:
       tags:
         - item
       summary: Create item
       description: This can only be done by the logged in admin.
       operationId: createItem
+      parameters:
+        - name: workspaceId
+          example: tF2aHCPz1NRiKTU89oqy
+          in: path
+          description: "The workspace ID that needs to be created"
+          required: true
+          schema:
+            type: string
+        - name: cardId
+          example: tF2aHCPz1NRiKTU89oqy
+          in: path
+          description: "The card ID that needs to be created"
+          required: true
+          schema:
+            type: string
       requestBody:
         description: Created item object
         content:
@@ -569,15 +584,63 @@ paths:
             application/xml:
               schema:
                 $ref: "#/components/schemas/Item"
-  /item/{itemId}:
     get:
       tags:
         - item
-      summary: Get item and render by item id
+      summary: Show list of items
+      description: This can only be done by the logged in user.
+      operationId: getCard
+      parameters:
+        - name: workspaceId
+          example: tF2aHCPz1NRiKTU89oqy
+          in: path
+          description: "The workspace ID that needs to be created"
+          required: true
+          schema:
+            type: string
+        - name: cardId
+          example: tF2aHCPz1NRiKTU89oqy
+          in: path
+          description: "The card ID that needs to be created"
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                $items: "#/components/schemas/Item"
+            application/xml:
+              schema:
+                type: array
+                $items: "#/components/schemas/Item"
+  /workspace/{workspaceId}/card/{cardId}/item/{itemId}:
+    get:
+      tags:
+        - item
+      summary: Get item and render by workspace and card id
       description: ""
       operationId: getItemById
       parameters:
+        - name: workspaceId
+          example: tF2aHCPz1NRiKTU89oqy
+          in: path
+          description: "The workspace ID that its card needs to be fetched"
+          required: true
+          schema:
+            type: string
+        - name: cardId
+          example: E8p4qhizMaLiWI9XkXKb
+          in: path
+          description: "The ID that needs to be fetched"
+          required: true
+          schema:
+            type: string
         - name: itemId
+          example: E8p4qhizMaLiWI9XkXKb
           in: path
           description: "The ID that needs to be fetched"
           required: true
@@ -594,24 +657,39 @@ paths:
               schema:
                 $ref: "#/components/schemas/Item"
         "400":
-          description: Invalid itemId supplied
+          description: Invalid id supplied
         "404":
           description: Item not found
     put:
       tags:
         - item
       summary: Update item
-      description: This can only be done by the logged in workspace's admin.
+      description: This can only be done by the logged in member.
       operationId: updateItem
       parameters:
-        - name: itemId
+        - name: workspaceId
+          example: tF2aHCPz1NRiKTU89oqy
           in: path
-          description: id that need to be updated
+          description: "The workspace ID that its card needs to be fetched"
+          required: true
+          schema:
+            type: string
+        - name: cardId
+          example: E8p4qhizMaLiWI9XkXKb
+          in: path
+          description: "The ID that needs to be fetched"
+          required: true
+          schema:
+            type: string
+        - name: itemId
+          example: E8p4qhizMaLiWI9XkXKb
+          in: path
+          description: "The ID that needs to be fetched"
           required: true
           schema:
             type: string
       requestBody:
-        description: Update an existent item in the card
+        description: Update an existent card in the workspace
         content:
           application/json:
             schema:
@@ -625,25 +703,86 @@ paths:
       responses:
         default:
           description: successful operation
-  /item/{itemId}/setActived:
-    get:
+    patch:
       tags:
         - item
-      summary: Set active for item
-      description: This can only be done by the logged in workspace's admin.
-      operationId: setActivedItem
+      summary: Patch item with field(s)
+      description: This can only be done by the logged in member.
+      operationId: patchItem
       parameters:
-        - name: itemId
+        - name: workspaceId
+          example: tF2aHCPz1NRiKTU89oqy
           in: path
-          description: id that need to set actived
+          description: "The workspace ID that its card needs to be fetched"
+          required: true
+          schema:
+            type: string
+        - name: cardId
+          example: E8p4qhizMaLiWI9XkXKb
+          in: path
+          description: "The ID that needs to be fetched"
+          required: true
+          schema:
+            type: string
+        - name: itemId
+          example: E8p4qhizMaLiWI9XkXKb
+          in: path
+          description: "The ID that needs to be fetched"
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Update item with field(s)
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ItemPatch"
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/ItemPatch"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/ItemPatch"
+      responses:
+        "200":
+          description: Thay đổi thành công
+        "400":
+          description: Thay đổi thất bại
+    delete:
+      tags:
+        - item
+      summary: Delete item
+      description: This can only be done by the logged in workspace's admin.
+      operationId: deleteItem
+      parameters:
+        - name: workspaceId
+          example: tF2aHCPz1NRiKTU89oqy
+          in: path
+          description: "The workspace ID that its card needs to be fetched"
+          required: true
+          schema:
+            type: string
+        - name: cardId
+          example: E8p4qhizMaLiWI9XkXKb
+          in: path
+          description: "The ID that needs to be fetched"
+          required: true
+          schema:
+            type: string
+        - name: itemId
+          example: E8p4qhizMaLiWI9XkXKb
+          in: path
+          description: "The ID that needs to be fetched"
           required: true
           schema:
             type: string
       responses:
         "200":
-          description: successful operation
+          description: Deleted successfully
+        "400":
+          description: Invalid id supplied
         "404":
-          description: item id not found
+          description: Workspace not found
   /todoList:
     post:
       tags:
