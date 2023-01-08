@@ -68,7 +68,7 @@ var getItem = function (req, res) { return __awaiter(void 0, void 0, void 0, fun
                 workspaceId = params.workspaceId;
                 cardId = params.cardId;
                 dataItem = [];
-                return [4, (0, lite_1.getDocs)((0, lite_1.collection)(db, "workspace", workspaceId, "card", cardId, 'item')).then(function (snap) {
+                return [4, (0, lite_1.getDocs)((0, lite_1.collection)(db, "workspace", workspaceId, "card", cardId, "item")).then(function (snap) {
                         snap.docs.map(function (doc) {
                             dataItem.push(__assign({ itemId: doc.id }, doc.data()));
                         });
@@ -81,7 +81,7 @@ var getItem = function (req, res) { return __awaiter(void 0, void 0, void 0, fun
 }); };
 exports.getItem = getItem;
 var createItem = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var db, params, workspaceId, cardId, newItem;
+    var db, params, workspaceId, cardId, dataItem, newItem;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -89,14 +89,20 @@ var createItem = function (req, res) { return __awaiter(void 0, void 0, void 0, 
                 params = req.params;
                 workspaceId = params.workspaceId;
                 cardId = params.cardId;
+                dataItem = [];
+                return [4, (0, lite_1.getDocs)((0, lite_1.collection)(db, "workspace", workspaceId, "card", cardId, "item")).then(function (snap) {
+                        snap.docs.map(function (doc) {
+                            dataItem.push(__assign({ itemId: doc.id }, doc.data()));
+                        });
+                    })];
+            case 1:
+                _a.sent();
                 newItem = {
                     itemName: req.body.itemName,
-                    description: req.body.description,
-                    deadline: req.body.deadline,
-                    background: req.body.background,
+                    index: dataItem.length + 1,
                 };
-                return [4, (0, lite_1.addDoc)((0, lite_1.collection)(db, "workspace", workspaceId, "card", cardId, 'item'), newItem)];
-            case 1:
+                return [4, (0, lite_1.addDoc)((0, lite_1.collection)(db, "workspace", workspaceId, "card", cardId, "item"), newItem)];
+            case 2:
                 _a.sent();
                 return [2, res.json(newItem).status(200)];
         }
@@ -113,7 +119,7 @@ var updateItem = function (req, res) { return __awaiter(void 0, void 0, void 0, 
                 workspaceId = params.workspaceId;
                 cardId = params.cardId;
                 itemId = params.itemId;
-                return [4, (0, lite_1.setDoc)((0, lite_1.doc)(db, "workspace", workspaceId, "card", cardId, 'item', itemId), __assign({}, req.body))
+                return [4, (0, lite_1.setDoc)((0, lite_1.doc)(db, "workspace", workspaceId, "card", cardId, "item", itemId), __assign({}, req.body))
                         .then(function () {
                         return res.json(req.body);
                     })
@@ -137,7 +143,7 @@ var getItemById = function (req, res) { return __awaiter(void 0, void 0, void 0,
                 workspaceId = params.workspaceId;
                 cardId = params.cardId;
                 itemId = params.itemId;
-                return [4, (0, lite_1.getDoc)((0, lite_1.doc)((0, lite_1.collection)(db, "workspace", workspaceId, "card", cardId, 'item'), itemId))
+                return [4, (0, lite_1.getDoc)((0, lite_1.doc)((0, lite_1.collection)(db, "workspace", workspaceId, "card", cardId, "item"), itemId))
                         .then(function (snap) {
                         return res.json(snap.data()).status(200);
                     })
@@ -161,7 +167,7 @@ var patchItem = function (req, res) { return __awaiter(void 0, void 0, void 0, f
                 workspaceId = params.workspaceId;
                 cardId = params.cardId;
                 itemId = params.itemId;
-                return [4, (0, lite_1.updateDoc)((0, lite_1.doc)((0, lite_1.collection)(db, "workspace", workspaceId, "card", cardId, 'item'), itemId), req.body)
+                return [4, (0, lite_1.updateDoc)((0, lite_1.doc)((0, lite_1.collection)(db, "workspace", workspaceId, "card", cardId, "item"), itemId), req.body)
                         .then(function () {
                         return res.json({ message: "Thay đổi thành công" }).status(200);
                     })
@@ -185,7 +191,7 @@ var deleteItem = function (req, res) { return __awaiter(void 0, void 0, void 0, 
                 workspaceId = params.workspaceId;
                 cardId = params.cardId;
                 itemId = params.itemId;
-                return [4, (0, lite_1.deleteDoc)((0, lite_1.doc)(db, "workspace", workspaceId, "card", cardId, 'item', itemId))
+                return [4, (0, lite_1.deleteDoc)((0, lite_1.doc)(db, "workspace", workspaceId, "card", cardId, "item", itemId))
                         .then(function () {
                         return res.json({ message: "Xoá thành công" }).status(200);
                     })

@@ -98,8 +98,7 @@ var createCard = function (req, res) { return __awaiter(void 0, void 0, void 0, 
                 console.log(dataCard);
                 newCard = {
                     cardName: req.body.cardName,
-                    isActived: true,
-                    index: dataCard.length + 1
+                    index: dataCard.length + 1,
                 };
                 return [4, (0, lite_1.addDoc)((0, lite_1.collection)(db, "workspace", workspaceId, "card"), newCard)];
             case 2:

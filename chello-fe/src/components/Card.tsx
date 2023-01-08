@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Draggable } from "react-beautiful-dnd";
 import { FaPlus, FaTrashAlt } from "react-icons/fa";
 import { useParams } from "react-router-dom";
 import { deleteCard, patchCard } from "../apis/card.api";
+import { createItem, fetchItem } from "../apis/item.api";
 import InputAdd from "./InputAdd";
 import Item from "./Item";
 import Modal from "./Modal";
@@ -10,11 +11,12 @@ import Modal from "./Modal";
 const Card = (props: any) => {
   let { workspaceId } = useParams();
   const { card } = props;
+  const [item, setItem] = useState<any[]>([]);
   const [showItemAdd, setShowItemAdd] = useState(false);
   const [newItemName, setNewItemName] = useState("");
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showEditCardName, setShowEditCardName] = useState(false);
-  const [newCardName, setNewCardName] = useState("");
+  const [newCardName, setNewCardName] = useState(card.cardName);
   const fetchCardFromWorkspace = props.fetchCardFromWorkspace;
 
   const handleToggleDeleteModal = () => {
@@ -37,23 +39,25 @@ const Card = (props: any) => {
     setNewItemName(e.target.value);
   };
 
-  const handleSubmitAddItem = (cardId: string) => {
+  const handleSubmitAddItem = async () => {
     if (newItemName === "") {
       return alert("Please enter card name");
     }
-    if (card.cardId === cardId) {
-      card.items.push({
-        itemId: "" + Math.random(),
-        itemName: newItemName,
-        // member: [],
-      });
-    }
+    // if (card.cardId === cardId) {
+    //   card.items.push({
+    //     itemId: "" + Math.random(),
+    //     itemName: newItemName,
+    //     // member: [],
+    //   });
+    // }
+    await createItem(workspaceId, card.cardId, newItemName);
+    fetchItemData();
     setShowItemAdd(!showItemAdd);
   };
 
-  const handleAddNewItem = (e: React.KeyboardEvent, cardId: string) => {
+  const handleAddNewItem = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
-      handleSubmitAddItem(cardId);
+      handleSubmitAddItem();
     }
   };
 
@@ -73,7 +77,6 @@ const Card = (props: any) => {
     }
     handleToggleShowEditCardName();
   };
-
   const handleKeyEditCardName = (
     e: React.KeyboardEvent,
     cardId: string | undefined
@@ -83,6 +86,18 @@ const Card = (props: any) => {
       handleToggleShowEditCardName();
     }
   };
+
+  // Handle item data
+  const fetchItemData = async () => {
+    const res = await fetchItem(workspaceId, card.cardId);
+    const itemSort = res.data.sort((a: any, b: any) => a.index - b.index);
+    setItem(itemSort);
+  };
+
+  useEffect(() => {
+    fetchItemData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="card">
@@ -122,8 +137,8 @@ const Card = (props: any) => {
           </span>
         </div>
         <div className="card-body">
-          {card.items &&
-            card.items.map((item: any, index: any) => (
+          {item &&
+            item.map((item: any, index: any) => (
               <Draggable
                 key={item.itemId}
                 draggableId={"" + item.itemId}
@@ -139,8 +154,10 @@ const Card = (props: any) => {
                     >
                       <Item
                         key={index}
-                        data={item}
+                        cardId={card.cardId}
+                        item={item}
                         isDragging={snapshot.isDragging}
+                        fetchItemData={fetchItemData}
                       />
                     </div>
                   );
@@ -151,8 +168,8 @@ const Card = (props: any) => {
           {showItemAdd && (
             <InputAdd
               handleSetNewName={(e) => handleSetNewItemName(e)}
-              handleAddNew={(e) => handleAddNewItem(e, card.cardId)}
-              handleSubmitAdd={() => handleSubmitAddItem(card.cardId)}
+              handleAddNew={handleAddNewItem}
+              handleSubmitAdd={handleSubmitAddItem}
               handleShowAdd={handleShowAddItem}
               placeholder={"thẻ"}
             />

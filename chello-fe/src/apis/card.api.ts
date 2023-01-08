@@ -42,18 +42,6 @@ export const deleteCard = async (
   return res;
 };
 
-// export const putWorkspace = async (
-//   card: CardInterface,
-//   cardId: string | undefined
-// ) => {
-//   const res = await axios.put(`${apiUrl}/card/${cardId}`, card, {
-//     headers: {
-//       contentType: "application/json",
-//     },
-//   });
-//   return res;
-// };
-
 export const patchCard = async (
   workspaceId: string | undefined,
   cardId: string | undefined,
@@ -70,12 +58,3 @@ export const patchCard = async (
   );
   return res;
 };
-
-// export const getWorkspaceById = async (cardId: string | undefined) => {
-//   const res = await axios.get(`${apiUrl}/card/${cardId}`, {
-//     headers: {
-//       contentType: "application/json",
-//     },
-//   });
-//   return res;
-// };

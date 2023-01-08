@@ -16,9 +16,9 @@ export interface ItemInterface {
   itemId?: string;
   itemName?: string;
   description?: string;
-  label?: string;
   background?: string;
-  deadline?: Date;
+  deadline?: string | number | Date;
+  index?: number;
 }
 
 export interface TodoListInterface {
