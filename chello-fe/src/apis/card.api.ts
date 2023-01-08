@@ -1,5 +1,5 @@
 import axios from "axios";
-// import { CardInterface } from "../types";
+import { CardInterface } from "../types";
 import { apiUrl } from "./index.api";
 
 export const fetchCard = async (workspaceId: string | undefined) => {
@@ -54,21 +54,22 @@ export const deleteCard = async (
 //   return res;
 // };
 
-// export const patchWorkspace = async (
-//   card: CardInterface,
-//   cardId: string | undefined
-// ) => {
-//   const res = await axios.patch(
-//     `${apiUrl}/card/${cardId}`,
-//     card,
-//     {
-//       headers: {
-//         contentType: "application/json",
-//       },
-//     }
-//   );
-//   return res;
-// };
+export const patchCard = async (
+  workspaceId: string | undefined,
+  cardId: string | undefined,
+  card: CardInterface
+) => {
+  const res = await axios.patch(
+    `${apiUrl}/workspace/${workspaceId}/card/${cardId}`,
+    card,
+    {
+      headers: {
+        contentType: "application/json",
+      },
+    }
+  );
+  return res;
+};
 
 // export const getWorkspaceById = async (cardId: string | undefined) => {
 //   const res = await axios.get(`${apiUrl}/card/${cardId}`, {

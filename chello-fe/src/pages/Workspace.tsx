@@ -429,8 +429,7 @@ const Workspace = () => {
                       key={card.cardId}
                     >
                       <Card
-                        data={card}
-                        setCard={setWorkspace}
+                        card={card}
                         placeholder={provided.placeholder}
                         isUsingPlaceholder={snapshot.isUsingPlaceholder}
                         fetchCardFromWorkspace={fetchCardFromWorkspace}

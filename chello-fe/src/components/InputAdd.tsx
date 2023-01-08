@@ -18,10 +18,7 @@ const InputAdd = (props: InputAddProps) => {
   } = props;
 
   return (
-    <div
-      className="item-add"
-      style={{ paddingTop: placeholder === "bảng" ? `10px` : 0 }}
-    >
+    <div className="item-add">
       <div className="item item-add-content">
         <input
           type="textbox"
