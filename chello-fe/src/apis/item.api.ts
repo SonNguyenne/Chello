@@ -1,3 +1,4 @@
+import { DndInterface } from "./../types";
 import axios from "axios";
 import { ItemInterface } from "../types";
 import { apiUrl } from "./index.api";
@@ -80,11 +81,20 @@ export const patchItem = async (
   return res;
 };
 
-// export const getWorkspaceById = async (cardId: string | undefined) => {
-//   const res = await axios.get(`${apiUrl}/card/${cardId}`, {
-//     headers: {
-//       contentType: "application/json",
-//     },
-//   });
-//   return res;
-// };
+export const patchDndItem = async (
+  workspaceId: string | undefined,
+  dndItem: DndInterface
+) => {
+  console.log(dndItem);
+
+  const res = await axios.post(
+    `${apiUrl}/workspace/${workspaceId}/card/item`,
+    dndItem,
+    {
+      headers: {
+        contentType: "application/json",
+      },
+    }
+  );
+  return res;
+};

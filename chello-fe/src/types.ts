@@ -34,3 +34,12 @@ export interface UserInterface {
   password?: string;
   avatar?: string;
 }
+
+// export interface DndInterface {
+//   index?: number;
+//   droppableId?: string;
+// }
+export interface DndInterface {
+  source?: object;
+  destination?: object;
+}

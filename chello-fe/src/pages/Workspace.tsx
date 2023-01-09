@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Droppable } from "react-beautiful-dnd";
+import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import {
   FaBolt,
   FaChevronDown,
@@ -18,6 +18,7 @@ import Card from "../components/Card";
 import InputAdd from "../components/InputAdd";
 import Loading from "../components/Loading";
 import { CardInterface, WorkspaceInterface } from "../types";
+import { handleDragEnd } from "../utils/HandleDnd";
 
 // const api = {
 //   workspaceId: "123",
@@ -419,28 +420,32 @@ const Workspace = () => {
           </div>
         </div>
         <div className="body">
-          {cards.map((card) => {
-            return (
-              <Droppable droppableId={card.cardId!} key={card.cardId}>
-                {(provided, snapshot) => {
-                  return (
-                    <div
-                      {...provided.droppableProps}
-                      ref={provided.innerRef}
-                      key={card.cardId}
-                    >
-                      <Card
-                        card={card}
-                        placeholder={provided.placeholder}
-                        isUsingPlaceholder={snapshot.isUsingPlaceholder}
-                        fetchCardFromWorkspace={fetchCardFromWorkspace}
-                      />
-                    </div>
-                  );
-                }}
-              </Droppable>
-            );
-          })}
+          <DragDropContext
+            onDragEnd={(result) => handleDragEnd(result, workspaceId)}
+          >
+            {cards.map((card) => {
+              return (
+                <Droppable droppableId={card.cardId!} key={card.cardId}>
+                  {(provided, snapshot) => {
+                    return (
+                      <div
+                        {...provided.droppableProps}
+                        ref={provided.innerRef}
+                        key={card.cardId}
+                      >
+                        <Card
+                          card={card}
+                          placeholder={provided.placeholder}
+                          isUsingPlaceholder={snapshot.isUsingPlaceholder}
+                          fetchCardFromWorkspace={fetchCardFromWorkspace}
+                        />
+                      </div>
+                    );
+                  }}
+                </Droppable>
+              );
+            })}
+          </DragDropContext>
           <div className="card card-create">
             <div
               className="card-wrapper"
