@@ -56,7 +56,7 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
     return to.concat(ar || Array.prototype.slice.call(from));
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.patchItem = exports.getItemById = exports.deleteItem = exports.updateItem = exports.getItem = exports.createItem = void 0;
+exports.patchDndItem = exports.patchItem = exports.getItemById = exports.deleteItem = exports.updateItem = exports.getItem = exports.createItem = void 0;
 var lite_1 = require("firebase/firestore/lite");
 var getItem = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var db, params, workspaceId, cardId, dataItem;
@@ -99,7 +99,7 @@ var createItem = function (req, res) { return __awaiter(void 0, void 0, void 0, 
                 _a.sent();
                 newItem = {
                     itemName: req.body.itemName,
-                    index: dataItem.length + 1,
+                    index: dataItem.length == 0 ? 0 : dataItem.length,
                 };
                 return [4, (0, lite_1.addDoc)((0, lite_1.collection)(db, "workspace", workspaceId, "card", cardId, "item"), newItem)];
             case 2:
@@ -205,4 +205,119 @@ var deleteItem = function (req, res) { return __awaiter(void 0, void 0, void 0, 
     });
 }); };
 exports.deleteItem = deleteItem;
+var patchDndItem = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var db, params, workspaceId, source, destination, thanhlz, data, dataSource, data_1, indexStart_1, indexEnd_1, data_2;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                db = (0, lite_1.getFirestore)();
+                params = req.params;
+                workspaceId = params.workspaceId;
+                source = req.body.source;
+                destination = req.body.destination;
+                return [4, (0, lite_1.getDocs)((0, lite_1.collection)(db, "workspace", workspaceId, "card", source.droppableId, 'item'))];
+            case 1:
+                data = _a.sent();
+                data.docs.map(function (doc) {
+                    console.log(doc.data(), doc.id, 'oasddddddddddddddddddddddddd');
+                    if (source.index === doc.data().index) {
+                        thanhlz = __assign({ itemId: doc.id }, doc.data());
+                        return thanhlz;
+                    }
+                });
+                console.log('check1', thanhlz);
+                if (!(source.droppableId !== destination.droppableId)) return [3, 6];
+                return [4, (0, lite_1.deleteDoc)((0, lite_1.doc)(db, "workspace", workspaceId, "card", source.droppableId, "item", thanhlz.itemId))];
+            case 2:
+                _a.sent();
+                return [4, (0, lite_1.getDocs)((0, lite_1.collection)(db, "workspace", workspaceId, "card", source.droppableId, 'item'))];
+            case 3:
+                dataSource = _a.sent();
+                dataSource.docs.map(function (item) { return __awaiter(void 0, void 0, void 0, function () {
+                    var data, indexTru;
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0:
+                                data = item.data();
+                                if (data.index >= thanhlz.index) {
+                                    indexTru = data.index === 0 ? 0 : data.index - 1;
+                                    data.index = indexTru;
+                                }
+                                return [4, (0, lite_1.setDoc)((0, lite_1.doc)((0, lite_1.collection)(db, "workspace", workspaceId, "card", source.droppableId, "item"), item.id), data)];
+                            case 1:
+                                _a.sent();
+                                return [2];
+                        }
+                    });
+                }); });
+                thanhlz.index = destination.index;
+                return [4, (0, lite_1.getDocs)((0, lite_1.collection)(db, "workspace", workspaceId, "card", destination.droppableId, 'item'))];
+            case 4:
+                data_1 = _a.sent();
+                data_1.docs.map(function (item) { return __awaiter(void 0, void 0, void 0, function () {
+                    var data, indexCong;
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0:
+                                data = item.data();
+                                if (data.index >= thanhlz.index) {
+                                    indexCong = data.index + 1;
+                                    data.index = indexCong;
+                                }
+                                return [4, (0, lite_1.setDoc)((0, lite_1.doc)((0, lite_1.collection)(db, "workspace", workspaceId, "card", destination.droppableId, "item"), item.id), data)];
+                            case 1:
+                                _a.sent();
+                                return [2];
+                        }
+                    });
+                }); });
+                return [4, (0, lite_1.addDoc)((0, lite_1.collection)(db, "workspace", workspaceId, "card", destination.droppableId, "item"), thanhlz)];
+            case 5:
+                _a.sent();
+                return [3, 9];
+            case 6:
+                if (!(destination.droppableId === source.droppableId)) return [3, 9];
+                console.log('thaglzzz trennn', thanhlz);
+                console.log('destination.index trennn', destination.index);
+                thanhlz.index = destination.index;
+                console.log('thaglzzz', thanhlz);
+                return [4, (0, lite_1.updateDoc)((0, lite_1.doc)((0, lite_1.collection)(db, "workspace", workspaceId, "card", source.droppableId, "item"), thanhlz.itemId), thanhlz)];
+            case 7:
+                _a.sent();
+                indexStart_1 = source.index;
+                indexEnd_1 = destination.index;
+                return [4, (0, lite_1.getDocs)((0, lite_1.collection)(db, "workspace", workspaceId, "card", destination.droppableId, 'item'))];
+            case 8:
+                data_2 = _a.sent();
+                data_2.docs.map(function (item) { return __awaiter(void 0, void 0, void 0, function () {
+                    var data, indexCong, indexCong;
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0:
+                                data = item.data();
+                                if (indexStart_1 < indexEnd_1) {
+                                    if (data.index > indexStart_1 && data.index <= indexEnd_1) {
+                                        indexCong = data.index - 1;
+                                        data.index = indexCong;
+                                    }
+                                }
+                                else if (indexStart_1 > indexEnd_1) {
+                                    if (data.index < indexStart_1 && data.index >= indexEnd_1) {
+                                        indexCong = data.index + 1;
+                                        data.index = indexCong;
+                                    }
+                                }
+                                return [4, (0, lite_1.setDoc)((0, lite_1.doc)((0, lite_1.collection)(db, "workspace", workspaceId, "card", destination.droppableId, "item"), item.id), data)];
+                            case 1:
+                                _a.sent();
+                                return [2];
+                        }
+                    });
+                }); });
+                _a.label = 9;
+            case 9: return [2];
+        }
+    });
+}); };
+exports.patchDndItem = patchDndItem;
 //# sourceMappingURL=item.controller.js.map

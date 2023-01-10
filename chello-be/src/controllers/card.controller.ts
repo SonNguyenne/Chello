@@ -51,7 +51,7 @@ const createCard = async (
   const newCard: CardInterface = {
     cardName: req.body.cardName,
     // isActived: true,
-    index: dataCard.length + 1,
+    index: dataCard.length == 0 ? 0 : dataCard.length,
   };
 
   await addDoc(collection(db, "workspace", workspaceId, "card"), newCard);

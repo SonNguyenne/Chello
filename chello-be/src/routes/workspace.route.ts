@@ -20,6 +20,7 @@ router.get("/:workspaceId/card/:cardId", cardController.getCardById);
 
 router.get("/:workspaceId/card/:cardId/item", itemController.getItem);
 router.post("/:workspaceId/card/:cardId/item", itemController.createItem);
+router.post("/:workspaceId/card/item", itemController.patchDndItem);
 router.put("/:workspaceId/card/:cardId/item/:itemId", itemController.updateItem);
 router.get("/:workspaceId/card/:cardId/item/:itemId", itemController.getItemById);
 router.patch("/:workspaceId/card/:cardId/item/:itemId", itemController.patchItem);
