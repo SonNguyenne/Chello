@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/SonNguyenne/Chello#readme",
   "dependencies": {
+    "@firebase/auth": "^0.21.0",
     "@types/express": "^4.17.15",
     "@types/lodash": "^4.14.191",
     "body-parser": "^1.20.1",

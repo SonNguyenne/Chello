@@ -32,4 +32,6 @@ var router = express_1.default.Router();
 exports.authenticationRouter = router;
 var authController = __importStar(require("../controllers/authentication.controller"));
 router.get("/", authController.index);
+router.post("/login", authController.login);
+router.post("/signup", authController.signup);
 //# sourceMappingURL=authentication.route.js.map
