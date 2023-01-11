@@ -19,6 +19,10 @@ import SlideMenu from "../components/SlideMenu";
 import { handleSubmitIsPublic } from "../utils/PatchWorkspace";
 
 const Dashboard = () => {
+  if (window.localStorage.getItem("user") == null) {
+    window.location.href = "/login";
+  }
+
   const [refresh, setRefresh] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showSlideMenu, setShowSlideMenu] = useState(true);

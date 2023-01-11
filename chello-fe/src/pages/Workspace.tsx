@@ -273,6 +273,10 @@ import { handleDragEnd } from "../utils/HandleDnd";
 // };
 
 const Workspace = () => {
+  if (window.localStorage.getItem("user") == null) {
+    window.location.href = "/login";
+  }
+
   let { workspaceId } = useParams();
   const [loading, setLoading] = useState(false);
   const [workspace, setWorkspace] = useState<WorkspaceInterface>();

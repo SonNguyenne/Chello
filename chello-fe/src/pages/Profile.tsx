@@ -10,6 +10,10 @@ const api = {
 };
 
 const Profile = () => {
+  if (window.localStorage.getItem("user") == null) {
+    window.location.href = "/login";
+  }
+
   const [user, setUser] = useState(api);
   const [previewAvatar, setPreviewAvatar] = useState(user.avatar);
   const [username, setUsername] = useState(user.username);

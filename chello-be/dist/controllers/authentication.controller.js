@@ -45,7 +45,7 @@ exports.index = index;
 var login = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var auth;
     return __generator(this, function (_a) {
-        console.log('longinnn');
+        console.log("longinnn");
         auth = (0, auth_1.getAuth)();
         (0, auth_1.signInWithEmailAndPassword)(auth, req.body.email, req.body.password)
             .then(function (userCredential) { return __awaiter(void 0, void 0, void 0, function () {
@@ -58,20 +58,24 @@ var login = function (req, res) { return __awaiter(void 0, void 0, void 0, funct
                     case 1:
                         token = _a.sent();
                         console.log("authhthtt", token);
-                        return [2, res.json({
+                        return [2, res
+                                .json({
                                 auth: token.token,
                                 email: user.email,
-                            })];
+                            })
+                                .status(200)];
                 }
             });
         }); })
             .catch(function (error) {
             var errorCode = error.code;
             var errorMessage = error.message;
-            return res.status(errorCode).json({
-                errorCode: errorCode,
-                errorMessage: errorMessage,
-            });
+            console.log(errorMessage, errorCode);
+            return res
+                .json({
+                message: "Tên đăng nhập hoặc mật khẩu không đúng",
+            })
+                .status(400);
         });
         return [2];
     });
@@ -83,13 +87,13 @@ var signup = function (req, res) {
         .then(function (userCredential) {
         var user = userCredential.user;
         console.log(user);
-        return res.json({ message: 'Đăng ký thành công' });
+        return res.json({ message: "Đăng ký thành công" });
     })
         .catch(function (error) {
         var errorCode = error.code;
         var errorMessage = error.message;
         console.log(errorMessage, errorCode);
-        return res.json({ message: 'lỗi r', errorMessage: errorMessage });
+        return res.json({ message: "Đăng kí thất bại", errorMessage: errorMessage });
     });
 };
 exports.signup = signup;

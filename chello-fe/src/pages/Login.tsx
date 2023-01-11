@@ -99,6 +99,7 @@ const Login = () => {
               autoFocus
               onKeyDown={handleKeyDown}
               onFocus={(e) => setShowPasswordInput(false)}
+              name="email"
             />
             {!showPasswordInput && (
               <FaRegArrowAltCircleRight onClick={submitUsername} />
@@ -108,6 +109,7 @@ const Login = () => {
             <div className="login-password">
               <input
                 type="password"
+                name="password"
                 placeholder="Nhập mật khẩu"
                 onChange={handleSetPassword}
                 autoFocus
