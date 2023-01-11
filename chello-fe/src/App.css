@@ -1410,11 +1410,13 @@ header.light * {
   right: 0;
   bottom: 0;
   z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .loading-container span {
   position: absolute;
   top: 40%;
-  left: 50%;
   animation: loadingSpinner 3s infinite;
 }
 .loading-container span svg {
