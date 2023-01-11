@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import {
   createUserWithEmailAndPassword,
   getAuth,
-  sendEmailVerification,
+  // sendEmailVerification,
   signInWithEmailAndPassword,
 } from "firebase/auth";
 
@@ -20,7 +20,7 @@ const login = async (req: Request, res: Response) => {
       console.log("authhthtt", token);
       return res.json({
         auth: token.token,
-        userName: user.displayName,
+        // userName: user.displayName,
         email: user.email,
       });
     })
@@ -36,19 +36,22 @@ const login = async (req: Request, res: Response) => {
 
 const signup = (req: Request, res: Response) => {
   const auth: any = getAuth();
-  console.log('authh',auth.currentUser)
-  sendEmailVerification(auth.currentUser).then(() => {
+  // console.log('authh',auth.currentUser)
+  // sendEmailVerification(auth.currentUser).then(() => {
     createUserWithEmailAndPassword(auth, req.body.email, req.body.password)
       .then((userCredential) => {
         const user = userCredential.user;
         console.log(user);
+        return res.json({message: 'Đăng ký thành công'})
       })
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
         console.log(errorMessage, errorCode);
+        return res.json({message: 'lỗi r', errorMessage})
       });
-  });
+  // });
+  
 };
 
 export { index, login, signup };
