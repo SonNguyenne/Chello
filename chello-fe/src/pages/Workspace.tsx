@@ -423,7 +423,7 @@ const Workspace = () => {
           <DragDropContext
             onDragEnd={(result) => handleDragEnd(result, workspaceId)}
           >
-            {cards.map((card, index) => {
+            {cards.map((card, i, { length }) => {
               return (
                 <Droppable droppableId={card.cardId!} key={card.cardId}>
                   {(provided, snapshot) => {
@@ -435,6 +435,7 @@ const Workspace = () => {
                       >
                         <Card
                           card={card}
+                          lastCard={card.index! + 1 === length ? true : false}
                           placeholder={provided.placeholder}
                           isUsingPlaceholder={snapshot.isUsingPlaceholder}
                           fetchCardFromWorkspace={fetchCardFromWorkspace}

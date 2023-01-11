@@ -58,3 +58,40 @@ export const patchCard = async (
   );
   return res;
 };
+
+export const getCardById = async (
+  workspaceId: string | undefined,
+  cardId: string | undefined
+) => {
+  const res = await axios.get(
+    `${apiUrl}/workspace/${workspaceId}/card/${cardId}`,
+    {
+      headers: {
+        contentType: "application/json",
+      },
+    }
+  );
+  return res;
+};
+
+export const patchIndexCard = async (
+  workspaceId: string | undefined,
+  cardId: string | undefined,
+  card: CardInterface
+) => {
+  const cards = await fetchCard(workspaceId);
+  const currentCard = await getCardById(workspaceId, cardId);
+  const currentIndex = currentCard.data.index;
+
+  const forwardIndex = card.index;
+  let forwardCard: CardInterface = {};
+  cards.data.map((card: CardInterface) => {
+    if (card.index === forwardIndex) {
+      return (forwardCard = card);
+    }
+    return 0;
+  });
+
+  await patchCard(workspaceId, cardId, { index: forwardIndex });
+  await patchCard(workspaceId, forwardCard.cardId, { index: currentIndex });
+};

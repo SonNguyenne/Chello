@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Draggable } from "react-beautiful-dnd";
 import { FaArrowLeft, FaArrowRight, FaPlus, FaTrashAlt } from "react-icons/fa";
 import { useParams } from "react-router-dom";
-import { deleteCard, patchCard } from "../apis/card.api";
+import { deleteCard, patchCard, patchIndexCard } from "../apis/card.api";
 import { createItem, fetchItem } from "../apis/item.api";
 import InputAdd from "./InputAdd";
 import Item from "./Item";
@@ -10,7 +10,7 @@ import Modal from "./Modal";
 
 const Card = (props: any) => {
   let { workspaceId } = useParams();
-  const { card, fetchCardFromWorkspace } = props;
+  const { card, fetchCardFromWorkspace, lastCard } = props;
   const [item, setItem] = useState<any[]>([]);
   const [showItemAdd, setShowItemAdd] = useState(false);
   const [newItemName, setNewItemName] = useState("");
@@ -42,13 +42,6 @@ const Card = (props: any) => {
     if (newItemName === "") {
       return alert("Please enter card name");
     }
-    // if (card.cardId === cardId) {
-    //   card.items.push({
-    //     itemId: "" + Math.random(),
-    //     itemName: newItemName,
-    //     // member: [],
-    //   });
-    // }
     await createItem(workspaceId, card.cardId, newItemName);
     fetchItemData();
     setShowItemAdd(!showItemAdd);
@@ -93,11 +86,13 @@ const Card = (props: any) => {
     setItem(itemSort);
   };
 
+  // Handle change index of card
   const submitMoveTo = async (direction: string) => {
     const value = direction === "left" ? -1 : 1;
-    await patchCard(workspaceId, card.cardId, {index: card.index+value})
-    console.log(card.index + value);
-    fetchCardFromWorkspace()
+    await patchIndexCard(workspaceId, card.cardId, {
+      index: card.index + value,
+    });
+    fetchCardFromWorkspace();
   };
 
   useEffect(() => {
@@ -143,9 +138,11 @@ const Card = (props: any) => {
               <FaArrowLeft />
             </span>
           )}
-          <span onClick={(e) => submitMoveTo("right")}>
-            <FaArrowRight />
-          </span>
+          {!lastCard && (
+            <span onClick={(e) => submitMoveTo("right")}>
+              <FaArrowRight />
+            </span>
+          )}
           <span onClick={handleToggleDeleteModal}>
             <FaTrashAlt />
           </span>
