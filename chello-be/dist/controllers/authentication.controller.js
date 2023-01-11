@@ -60,7 +60,6 @@ var login = function (req, res) { return __awaiter(void 0, void 0, void 0, funct
                         console.log("authhthtt", token);
                         return [2, res.json({
                                 auth: token.token,
-                                userName: user.displayName,
                                 email: user.email,
                             })];
                 }
@@ -80,18 +79,17 @@ var login = function (req, res) { return __awaiter(void 0, void 0, void 0, funct
 exports.login = login;
 var signup = function (req, res) {
     var auth = (0, auth_1.getAuth)();
-    console.log('authh', auth.currentUser);
-    (0, auth_1.sendEmailVerification)(auth.currentUser).then(function () {
-        (0, auth_1.createUserWithEmailAndPassword)(auth, req.body.email, req.body.password)
-            .then(function (userCredential) {
-            var user = userCredential.user;
-            console.log(user);
-        })
-            .catch(function (error) {
-            var errorCode = error.code;
-            var errorMessage = error.message;
-            console.log(errorMessage, errorCode);
-        });
+    (0, auth_1.createUserWithEmailAndPassword)(auth, req.body.email, req.body.password)
+        .then(function (userCredential) {
+        var user = userCredential.user;
+        console.log(user);
+        return res.json({ message: 'Đăng ký thành công' });
+    })
+        .catch(function (error) {
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        console.log(errorMessage, errorCode);
+        return res.json({ message: 'lỗi r', errorMessage: errorMessage });
     });
 };
 exports.signup = signup;
