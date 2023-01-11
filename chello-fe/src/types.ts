@@ -30,15 +30,11 @@ export interface TodoListInterface {
 export interface UserInterface {
   userId?: string;
   username?: string;
-  mail?: string;
+  email?: string;
   password?: string;
   avatar?: string;
 }
 
-// export interface DndInterface {
-//   index?: number;
-//   droppableId?: string;
-// }
 export interface DndInterface {
   source?: object;
   destination?: object;

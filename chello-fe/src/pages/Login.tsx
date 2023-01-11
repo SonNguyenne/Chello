@@ -8,6 +8,8 @@ import {
   FaRegArrowAltCircleRight,
 } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { login } from "../apis/authenication.api";
+import { UserInterface } from "../types";
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -33,13 +35,23 @@ const Login = () => {
   const handleSetPassword = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
   };
-  const handleSubmit = () => {
+  const handleKeyDownPassword = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      if (!password) {
+        alert("Please enter a password");
+      } else if (password) {
+        handleSubmit();
+      }
+    }
+  };
+  const handleSubmit = async () => {
     if (username === "") {
       return alert("Please enter username");
     } else if (password === "") {
       return alert("Please enter password");
     } else {
-      return alert(`Username: ${username} \nPassword: ${password}`);
+      const newUser: UserInterface = { email: username, password };
+      await login(newUser);
     }
   };
 
@@ -86,6 +98,7 @@ const Login = () => {
               onChange={handleSetUsername}
               autoFocus
               onKeyDown={handleKeyDown}
+              onFocus={(e) => setShowPasswordInput(false)}
             />
             {!showPasswordInput && (
               <FaRegArrowAltCircleRight onClick={submitUsername} />
@@ -98,6 +111,7 @@ const Login = () => {
                 placeholder="Nhập mật khẩu"
                 onChange={handleSetPassword}
                 autoFocus
+                onKeyDown={handleKeyDownPassword}
                 required
               />
               <FaRegArrowAltCircleRight onClick={handleSubmit} />
