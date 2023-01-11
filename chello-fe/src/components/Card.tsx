@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Draggable } from "react-beautiful-dnd";
-import { FaPlus, FaTrashAlt } from "react-icons/fa";
+import { FaArrowLeft, FaArrowRight, FaPlus, FaTrashAlt } from "react-icons/fa";
 import { useParams } from "react-router-dom";
 import { deleteCard, patchCard } from "../apis/card.api";
 import { createItem, fetchItem } from "../apis/item.api";
@@ -10,14 +10,13 @@ import Modal from "./Modal";
 
 const Card = (props: any) => {
   let { workspaceId } = useParams();
-  const { card } = props;
+  const { card, fetchCardFromWorkspace } = props;
   const [item, setItem] = useState<any[]>([]);
   const [showItemAdd, setShowItemAdd] = useState(false);
   const [newItemName, setNewItemName] = useState("");
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showEditCardName, setShowEditCardName] = useState(false);
   const [newCardName, setNewCardName] = useState(card.cardName);
-  const fetchCardFromWorkspace = props.fetchCardFromWorkspace;
 
   const handleToggleDeleteModal = () => {
     setShowDeleteModal(!showDeleteModal);
@@ -94,6 +93,13 @@ const Card = (props: any) => {
     setItem(itemSort);
   };
 
+  const submitMoveTo = async (direction: string) => {
+    const value = direction === "left" ? -1 : 1;
+    await patchCard(workspaceId, card.cardId, {index: card.index+value})
+    console.log(card.index + value);
+    fetchCardFromWorkspace()
+  };
+
   useEffect(() => {
     fetchItemData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -132,6 +138,14 @@ const Card = (props: any) => {
               onBlur={() => submitEditCardName(card.cardId)}
             />
           )}
+          {card.index !== 0 && (
+            <span onClick={(e) => submitMoveTo("left")}>
+              <FaArrowLeft />
+            </span>
+          )}
+          <span onClick={(e) => submitMoveTo("right")}>
+            <FaArrowRight />
+          </span>
           <span onClick={handleToggleDeleteModal}>
             <FaTrashAlt />
           </span>

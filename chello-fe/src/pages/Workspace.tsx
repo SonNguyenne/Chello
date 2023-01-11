@@ -423,7 +423,7 @@ const Workspace = () => {
           <DragDropContext
             onDragEnd={(result) => handleDragEnd(result, workspaceId)}
           >
-            {cards.map((card) => {
+            {cards.map((card, index) => {
               return (
                 <Droppable droppableId={card.cardId!} key={card.cardId}>
                   {(provided, snapshot) => {

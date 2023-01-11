@@ -888,13 +888,15 @@ header.light * {
 }
 .card .card-header input {
   padding: 5px;
+  margin-left: 5px;
   background-color: white;
   border: 0.1px solid transparent;
   border-radius: var(--border-radius);
   width: 100%;
   box-shadow: var(--box-shadow);
+  font-size: 18px;
 }
-.card .card-header span:nth-child(2) {
+.card .card-header span:not(:first-child) {
   border-radius: var(--border-radius);
   font-size: 18px;
   height: 18px;
@@ -968,7 +970,7 @@ header.light * {
   border-radius: var(--border-radius);
   height: 18px;
 }
-.card .card-header span:nth-child(2):hover,
+.card .card-header span:not(:first-child):hover,
 .card .card-footer:hover {
   cursor: pointer;
   color: #000000;
